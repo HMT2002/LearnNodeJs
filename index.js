@@ -25,6 +25,10 @@ const server = http.createServer((req, res) => {
       'Content-type': 'application/json',
     });
     res.end(quiz_data);
+  } else if (path_name == '/sign-up') {
+  } else if (path_name == '/sign-in') {
+  } else if (path_name == '/sign-out') {
+  } else if (path_name == '/upload') {
   } else {
     res.writeHead(404, {
       'Content-type': 'text/html',
