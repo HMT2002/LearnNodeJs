@@ -5,9 +5,23 @@ const url = require('url');
 
 //#region FILES
 
-const quiz_data = fs.readFileSync('./json-resources/data.json', 'utf-8');
-const quiz_obj = JSON.parse(quiz_data);
+const tempOverview = fs.readFileSync(
+  './templates/template-overview.html',
+  'utf-8'
+);
+const tempCard = fs.readFileSync('./templates/template-card.html', 'utf-8');
+const tempPost = fs.readFileSync('./templates/template-post.html', 'utf-8');
+const postData = fs.readFileSync('./json-resources/post-data.json', 'utf-8');
 
+const postObj = JSON.parse(postData);
+
+//#endregion
+
+//#region FUNCTION
+const replaceTemplate = (temp, post) => {
+  let output = temp.replace(/{%POSTTITLE%}/g, post.title);
+  return output;
+};
 //#endregion
 
 //#region SERVER
@@ -16,20 +30,54 @@ const server = http.createServer((req, res) => {
 
   const path_name = req.url;
 
+  //Overview page
   if (path_name === '/' || path_name === '/overview') {
-    res.end('This is the overview');
-  } else if (path_name == '/product') {
-    res.end('This is the product');
-  } else if (path_name == '/api') {
+    res.writeHead(200, {
+      'Content-type': 'text/html',
+    });
+
+    const cardsHtml = postObj
+      .map((el) => replaceTemplate(tempCard, el))
+      .join('');
+
+    //console.log(cardsHtml);
+
+    const output = tempOverview.replace(/{%POST_CARD%}/g, cardsHtml);
+
+    res.end(output);
+  }
+
+  //Post page
+  else if (path_name == '/post') {
+    res.end('');
+  }
+
+  //API
+  else if (path_name == '/api') {
     res.writeHead(200, {
       'Content-type': 'application/json',
     });
     res.end(quiz_data);
-  } else if (path_name == '/sign-up') {
-  } else if (path_name == '/sign-in') {
-  } else if (path_name == '/sign-out') {
-  } else if (path_name == '/upload') {
-  } else {
+  }
+
+  //Sign up
+  else if (path_name == '/sign-up') {
+  }
+
+  //Sign in
+  else if (path_name == '/sign-in') {
+  }
+
+  //Sign out
+  else if (path_name == '/sign-out') {
+  }
+
+  //Upload
+  else if (path_name == '/upload') {
+  }
+
+  //Not found
+  else {
     res.writeHead(404, {
       'Content-type': 'text/html',
       'My-own-setup-header': 'Custom header',
