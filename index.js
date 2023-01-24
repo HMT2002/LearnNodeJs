@@ -11,6 +11,15 @@ const tempOverview = fs.readFileSync(
 );
 const tempCard = fs.readFileSync('./templates/template-card.html', 'utf-8');
 const tempPost = fs.readFileSync('./templates/template-post.html', 'utf-8');
+const tempSignIn = fs.readFileSync(
+  './templates/template-sign-in.html',
+  'utf-8'
+);
+const tempSignUp = fs.readFileSync(
+  './templates/template-sign-up.html',
+  'utf-8'
+);
+
 const postData = fs.readFileSync('./json-resources/post-data.json', 'utf-8');
 
 const postObj = JSON.parse(postData);
@@ -62,10 +71,18 @@ const server = http.createServer((req, res) => {
 
   //Sign up
   else if (path_name == '/sign-up') {
+    res.writeHead(200, {
+      'Content-type': 'text/html',
+    });
+    res.end(tempSignUp);
   }
 
   //Sign in
   else if (path_name == '/sign-in') {
+    res.writeHead(200, {
+      'Content-type': 'text/html',
+    });
+    res.end(tempSignIn);
   }
 
   //Sign out
