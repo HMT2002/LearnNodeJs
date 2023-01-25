@@ -9,8 +9,11 @@ const tempOverview = fs.readFileSync(
   './templates/template-overview.html',
   'utf-8'
 );
+
 const tempCard = fs.readFileSync('./templates/template-card.html', 'utf-8');
+
 const tempPost = fs.readFileSync('./templates/template-post.html', 'utf-8');
+
 const tempSignIn = fs.readFileSync(
   './templates/template-sign-in.html',
   'utf-8'
@@ -21,24 +24,30 @@ const tempSignUp = fs.readFileSync(
 );
 
 const postData = fs.readFileSync('./json-resources/post-data.json', 'utf-8');
-
 const postObj = JSON.parse(postData);
 
 //#endregion
 
 //#region FUNCTION
-const replaceTemplate = (temp, post) => {
-  let output = temp.replace(/{%POSTTITLE%}/g, post.title);
+const replaceTemplatePOSTTITLE = (temp, post) => {
+  let output = temp
+    .replace(/{%POSTTITLE%}/g, post.title)
+    .replace(/{%POSTID%}/g, post._id.$oid);
   return output;
 };
+
 //#endregion
 
 //#region SERVER
 const server = http.createServer((req, res) => {
-  console.log(req.url);
+  console.log(url.parse(req.url, true));
 
-  const path_name = req.url;
+  const { query, pathname } = url.parse(req.url, true);
 
+  const path_name = pathname;
+
+  console.log(path_name);
+  console.log(query);
   //Overview page
   if (path_name === '/' || path_name === '/overview') {
     res.writeHead(200, {
@@ -46,7 +55,7 @@ const server = http.createServer((req, res) => {
     });
 
     const cardsHtml = postObj
-      .map((el) => replaceTemplate(tempCard, el))
+      .map((el) => replaceTemplatePOSTTITLE(tempCard, el))
       .join('');
 
     //console.log(cardsHtml);
@@ -56,9 +65,12 @@ const server = http.createServer((req, res) => {
     res.end(output);
   }
 
-  //Post page
+  //Post detail
   else if (path_name == '/post') {
-    res.end('');
+    res.writeHead(200, {
+      'Content-type': 'text/html',
+    });
+    res.end(tempPost);
   }
 
   //API
