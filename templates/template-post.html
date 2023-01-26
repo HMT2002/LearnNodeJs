@@ -1,32 +1,119 @@
-
-<!DOCTYPE html>
 <html title='SummerForum'>
 <meta charset='utf-8' />
 
-<head>
+<header>
     <h1>Summer Forum Testing</h1>
     <a href='/'><button id="btn_Back" name="btn_Back">Trở lại</button></a>
-<!-- 
-    <audio id='au_backgoundBGM' loop='infinite' autoplay>
+
+    <style>
+.div_Main {
+  position: relative;
+  display: inline;
+  background-color: rgb(4, 166, 172);
+}
+
+div,
+h1,
+h2,
+h4,
+label {
+  color: rgb(12, 247, 24);
+}
+
+html {
+  background-image: url('images/676334.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.div_Main {
+  display: block;
+  background-color: rgb(11, 124, 223);
+  box-sizing: border-box;
+  border-radius: 5px;
+  height: auto;
+  width: 600px;
+  padding: 10px;
+  vertical-align: top;
+}
+
+.dynamical_div_Textdisplay {
+  color: rgb(234, 250, 7);
+  display: inline-block;
+}
+
+.dynamical_div_Title {
+  display: block;
+  width: 300px;
+  height: 30px;
+  margin: 16px;
+
+  color: rgb(9, 25, 250);
+}
+.dynamical_div_Comment{
+  display: block;
+    width: 70%;
+    height: 50px;
+    margin: 30px;
+  
+    color: rgb(9, 250, 21);
+}
+
+.Title {
+  color: rgb(255, 0, 0);
+}
+
+.dynamical_div_Content {
+  display: block;
+  width: 300px;
+  height: 30px;
+  margin: 16px;
+  color: rgb(250, 9, 9);
+}
+
+.Title {
+
+  width: 400px;
+  height: 40px;
+
+}
+
+.Content {
+
+  text-align: left;
+  display: block;
+  word-wrap: break-word;
+  width: 400px;
+  height: 300px;
+}
+
+.holder {
+  width: 400px;
+  height: 210px;
+  background-color: aliceblue;
+}
+
+.dynamical_div_Image {
+  width: 100px;
+  height: 100px;
+  margin: auto;
+  display: inline-block;
+  position: relative;
+}
+
+.img_Avatar {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 4px;
+}
+    </style>
+
+    <!-- <audio id='au_backgoundBGM' loop='infinite' autoplay>
         <source src='musics/playlist0.mp3' type='audio/mpeg' />
     </audio> -->
-    <style>
-        body {
-          padding: 5rem 5rem 10rem;
-          line-height: 1.7;
-          font-family: 'Nunito Sans', sans-serif;
-          color: #555;
-          min-height: 100vh;
-          background: linear-gradient(to bottom right, #1648ec, #00e3ae);
-        }
-        .card__title-box {
-          margin-right: auto;
-          display: flex;
-          align-items: center;
-          padding: 0 3rem;
-        }
-      </style>
-</head>
+</header>
 
 <body>
 
@@ -37,10 +124,16 @@
                 <p class="dynamical_div_Link">{%POSTLINK%}</p>
                 <p id="dynamical_div_Content" class="dynamical_div_Content">{%POSTCONTENT%}</p>
             </div>
+            <p id="dynamical_div_Content" class="dynamical_div_Content">{%POSTUSER%}</p>
+
         </div>
+        <div id="div_Comment" class="div_Comment" name="div_Comment">
+
         </div>
+
     </div>
     </div>
+
 </body>
 <footer>
     <h4>blueseabinhtien@yahoo.com.vn</h4>

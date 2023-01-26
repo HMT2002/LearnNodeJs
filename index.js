@@ -36,6 +36,17 @@ const replaceTemplatePOSTTITLE = (temp, post) => {
   return output;
 };
 
+const replaceTemplatePOST = (temp, post) => {
+  let output = temp
+    .replace(/{%POSTTITLE%}/g, post.title)
+    .replace(/{%POSTID%}/g, post._id.$oid)
+    .replace(/{%POSTCONTENT%}/g, post.content)
+    .replace(/{%POSTLINK%}/g, post.link)
+    .replace(/{%POSTUSER%}/g, post.user.$oid);
+
+  return output;
+};
+
 //#endregion
 
 //#region SERVER
@@ -70,7 +81,12 @@ const server = http.createServer((req, res) => {
     res.writeHead(200, {
       'Content-type': 'text/html',
     });
-    res.end(tempPost);
+
+    const output = postObj
+      .map((el) => replaceTemplatePOST(tempPost, el))
+      .join('');
+
+    res.end(output);
   }
 
   //API
