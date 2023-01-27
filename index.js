@@ -59,6 +59,7 @@ const server = http.createServer((req, res) => {
 
   console.log(path_name);
   console.log(query);
+
   //Overview page
   if (path_name === '/' || path_name === '/overview') {
     res.writeHead(200, {
@@ -82,9 +83,9 @@ const server = http.createServer((req, res) => {
       'Content-type': 'text/html',
     });
 
-    const output = postObj
-      .map((el) => replaceTemplatePOST(tempPost, el))
-      .join('');
+    const post = postObj.find((e) => e._id.$oid === query.id);
+
+    const output = replaceTemplatePOST(tempPost, post);
 
     res.end(output);
   }
