@@ -2,6 +2,7 @@ const fs = require('fs');
 const http = require('http');
 const { json } = require('stream/consumers');
 const url = require('url');
+const replaceTemplate = require('./modules/replaceTemplate');
 
 //#region FILES
 
@@ -29,23 +30,17 @@ const postObj = JSON.parse(postData);
 //#endregion
 
 //#region FUNCTION
-const replaceTemplatePOSTTITLE = (temp, post) => {
-  let output = temp
-    .replace(/{%POSTTITLE%}/g, post.title)
-    .replace(/{%POSTID%}/g, post._id.$oid);
-  return output;
-};
 
-const replaceTemplatePOST = (temp, post) => {
-  let output = temp
-    .replace(/{%POSTTITLE%}/g, post.title)
-    .replace(/{%POSTID%}/g, post._id.$oid)
-    .replace(/{%POSTCONTENT%}/g, post.content)
-    .replace(/{%POSTLINK%}/g, post.link)
-    .replace(/{%POSTUSER%}/g, post.user.$oid);
+// const replaceTemplatePOST = (temp, post) => {
+//   let output = temp
+//     .replace(/{%POSTTITLE%}/g, post.title)
+//     .replace(/{%POSTID%}/g, post._id.$oid)
+//     .replace(/{%POSTCONTENT%}/g, post.content)
+//     .replace(/{%POSTLINK%}/g, post.link)
+//     .replace(/{%POSTUSER%}/g, post.user.$oid);
 
-  return output;
-};
+//   return output;
+// };
 
 //#endregion
 
@@ -67,7 +62,7 @@ const server = http.createServer((req, res) => {
     });
 
     const cardsHtml = postObj
-      .map((el) => replaceTemplatePOSTTITLE(tempCard, el))
+      .map((el) => replaceTemplate(tempCard, el))
       .join('');
 
     //console.log(cardsHtml);
@@ -85,7 +80,7 @@ const server = http.createServer((req, res) => {
 
     const post = postObj.find((e) => e._id.$oid === query.id);
 
-    const output = replaceTemplatePOST(tempPost, post);
+    const output = replaceTemplate(tempPost, post);
 
     res.end(output);
   }

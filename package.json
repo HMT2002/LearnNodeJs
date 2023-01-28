@@ -1,0 +1,25 @@
+{
+  "name": "poster-forum",
+  "version": "1.0.0",
+  "description": "poster forum for later development",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HMT2002/LearnNodeJs.git"
+  },
+  "author": "Ho Minh Tue",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HMT2002/LearnNodeJs/issues"
+  },
+  "homepage": "https://github.com/HMT2002/LearnNodeJs#readme",
+  "dependencies": {
+    "slugify": "^1.6.5"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
