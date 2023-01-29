@@ -2,6 +2,9 @@ const fs = require('fs');
 const http = require('http');
 const { json } = require('stream/consumers');
 const url = require('url');
+
+const slugify = require('slugify');
+
 const replaceTemplate = require('./modules/replaceTemplate');
 
 //#region FILES
@@ -31,20 +34,15 @@ const postObj = JSON.parse(postData);
 
 //#region FUNCTION
 
-// const replaceTemplatePOST = (temp, post) => {
-//   let output = temp
-//     .replace(/{%POSTTITLE%}/g, post.title)
-//     .replace(/{%POSTID%}/g, post._id.$oid)
-//     .replace(/{%POSTCONTENT%}/g, post.content)
-//     .replace(/{%POSTLINK%}/g, post.link)
-//     .replace(/{%POSTUSER%}/g, post.user.$oid);
-
-//   return output;
-// };
-
 //#endregion
 
 //#region SERVER
+
+const slugs = postObj.map((el) => {
+  return slugify(el._id.$oid, { lower: true });
+});
+console.log(slugs);
+
 const server = http.createServer((req, res) => {
   console.log(url.parse(req.url, true));
 

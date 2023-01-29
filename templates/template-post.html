@@ -110,6 +110,12 @@ html {
   border-radius: 50%;
   margin-right: 4px;
 }
+
+.post-image {
+    text-align: center;
+    background: #000;
+    position: relative;
+}
     </style>
 
     <!-- <audio id='au_backgoundBGM' loop='infinite' autoplay>
@@ -119,17 +125,20 @@ html {
 
 <body>
 
-    <div class='div_Main' name='div_Main' id='div_Main'>
-        <div class='div_Display' name='div_Display' id='div_Display'>
-            <div class='dynamical_div_Textdisplay' name='dynamical_div_Textdisplay' id='dynamical_div_Textdisplay'>
+    <div class='div_Main' >
+        <div class='div_Display'>
+            <div class='dynamical_div_Textdisplay'>
                 <p class="dynamical_div_Title">{%POSTTITLE%}</p>
                 <p class="dynamical_div_Link">{%POSTLINK%}</p>
-                <p id="dynamical_div_Content" class="dynamical_div_Content">{%POSTCONTENT%}</p>
+                <div class="dynamical_div_Content">{%POSTCONTENT%}</div>
             </div>
-            <p id="dynamical_div_Content" class="dynamical_div_Content">{%POSTUSER%}</p>
-
+            <p class="dynamical_div_Content">{%POSTUSER%}</p>
+            <div><img alt="nothing" width="100" height="100" src="https://res.cloudinary.com/dd6jkjkfp/image/upload/v1660662802/npqgsrj18tqqd8p97g18.jpg"></div>
+            <div><img alt="nothing" width="100" height="100" src="https://i.imgur.com/f01Ert6.jpg"></div>
+            <!-- <div><img alt="nothing" width="100" height="100" src="https://proxy.duckduckgo.com/iu/?u=https://i.imgur.com/f01Ert6.jpg"></div> -->
+            <div><img alt="nothing" width="100" height="100" src="https://cdn.discordapp.com/attachments/1011465120502775821/1064203817735962814/85a149beb36a8543b2038553bf5cfbd1_-_Copy.jpg"></div>
         </div>
-        <div id="div_Comment" class="div_Comment" name="div_Comment">
+        <div class="div_Comment" >
 
         </div>
 
