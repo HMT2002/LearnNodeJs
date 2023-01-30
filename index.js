@@ -6,6 +6,7 @@ const url = require('url');
 const slugify = require('slugify');
 
 const replaceTemplate = require('./modules/replaceTemplate');
+const replaceVideoTemp = require('./modules/replaceVideo');
 
 //#region FILES
 
@@ -17,6 +18,7 @@ const tempOverview = fs.readFileSync(
 const tempCard = fs.readFileSync('./templates/template-card.html', 'utf-8');
 
 const tempPost = fs.readFileSync('./templates/template-post.html', 'utf-8');
+const tempVideo = fs.readFileSync('./templates/template-video.html', 'utf-8');
 
 const tempSignIn = fs.readFileSync(
   './templates/template-sign-in.html',
@@ -78,7 +80,8 @@ const server = http.createServer((req, res) => {
 
     const post = postObj.find((e) => e._id.$oid === query.id);
 
-    const output = replaceTemplate(tempPost, post);
+    const video = replaceVideoTemp(tempVideo, post);
+    const output = replaceTemplate(tempPost, post).replace(/{%VIDEO%}/g, video);
 
     res.end(output);
   }
@@ -109,6 +112,16 @@ const server = http.createServer((req, res) => {
 
   //Sign out
   else if (path_name == '/sign-out') {
+  }
+
+  //Create post
+  else if (path_name == '/create-post') {
+    res.end('create post page');
+  }
+
+  //Update post
+  else if (path_name == '/update-post') {
+    res.end('update post page');
   }
 
   //Upload
