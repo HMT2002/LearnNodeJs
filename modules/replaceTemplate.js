@@ -1,5 +1,4 @@
 const replaceImage = require('./replaceImage');
-const replaceVideo = require('./replaceVideo');
 
 module.exports = (temp, post) => {
   let output = temp

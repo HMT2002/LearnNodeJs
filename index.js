@@ -10,24 +10,15 @@ const replaceVideoTemp = require('./modules/replaceVideo');
 
 //#region FILES
 
-const tempOverview = fs.readFileSync(
-  './templates/template-overview.html',
-  'utf-8'
-);
+const tempOverview = fs.readFileSync('./templates/template-overview.html', 'utf-8');
 
 const tempCard = fs.readFileSync('./templates/template-card.html', 'utf-8');
 
 const tempPost = fs.readFileSync('./templates/template-post.html', 'utf-8');
 const tempVideo = fs.readFileSync('./templates/template-video.html', 'utf-8');
 
-const tempSignIn = fs.readFileSync(
-  './templates/template-sign-in.html',
-  'utf-8'
-);
-const tempSignUp = fs.readFileSync(
-  './templates/template-sign-up.html',
-  'utf-8'
-);
+const tempSignIn = fs.readFileSync('./templates/template-sign-in.html', 'utf-8');
+const tempSignUp = fs.readFileSync('./templates/template-sign-up.html', 'utf-8');
 
 const postData = fs.readFileSync('./json-resources/post-data.json', 'utf-8');
 const postObj = JSON.parse(postData);
@@ -61,9 +52,7 @@ const server = http.createServer((req, res) => {
       'Content-type': 'text/html',
     });
 
-    const cardsHtml = postObj
-      .map((el) => replaceTemplate(tempCard, el))
-      .join('');
+    const cardsHtml = postObj.map((el) => replaceTemplate(tempCard, el)).join('');
 
     //console.log(cardsHtml);
 
@@ -116,12 +105,29 @@ const server = http.createServer((req, res) => {
 
   //Create post
   else if (path_name == '/create-post') {
-    res.end('create post page');
-  }
+    //vì không phải ai vào web cũng tạo post được (chỉ có người tại nội dung mới đăng), nên phải
+    const tempCreatePost = fs.readFileSync('./templates/template-create-post.html', 'utf-8');
+    res.writeHead(200, {
+      'Content-type': 'text/html',
+    });
+    const post = postObj.find((e) => e._id.$oid === query.id);
+    res.end(tempCreatePost);
+  } else if (path_name == '/post-store') {
+    res.writeHead(200, {
+      'Content-type': 'text/html',
+    });
+    const post = postObj.find((e) => e._id.$oid === query.id);
 
+    res.end('The post has been stored');
+  }
   //Update post
   else if (path_name == '/update-post') {
-    res.end('update post page');
+    const tempUpedatePost = fs.readFileSync('./templates/template-update-post.html', 'utf-8');
+    res.writeHead(200, {
+      'Content-type': 'text/html',
+    });
+    const post = postObj.find((e) => e._id.$oid === query.id);
+    res.end(tempUpedatePost);
   }
 
   //Upload
