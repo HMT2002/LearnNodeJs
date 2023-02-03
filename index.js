@@ -16,6 +16,7 @@ const tempCard = fs.readFileSync('./templates/template-card.html', 'utf-8');
 
 const tempPost = fs.readFileSync('./templates/template-post.html', 'utf-8');
 const tempVideo = fs.readFileSync('./templates/template-video.html', 'utf-8');
+const tempUpdateButton = fs.readFileSync('./templates/template-update-button.html', 'utf-8');
 
 const tempSignIn = fs.readFileSync('./templates/template-sign-in.html', 'utf-8');
 const tempSignUp = fs.readFileSync('./templates/template-sign-up.html', 'utf-8');
@@ -68,9 +69,11 @@ const server = http.createServer((req, res) => {
     });
 
     const post = postObj.find((e) => e._id.$oid === query.id);
-
     const video = replaceVideoTemp(tempVideo, post);
-    const output = replaceTemplate(tempPost, post).replace(/{%VIDEO%}/g, video);
+    const update_button = replaceTemplate(tempUpdateButton, post);
+    const output = replaceTemplate(tempPost, post)
+      .replace(/{%VIDEO%}/g, video)
+      .replace(/{%UPDATEPOST_BUTTON%}/g, update_button);
 
     res.end(output);
   }
@@ -117,7 +120,6 @@ const server = http.createServer((req, res) => {
       'Content-type': 'text/html',
     });
     const post = postObj.find((e) => e._id.$oid === query.id);
-
     res.end('The post has been stored');
   }
   //Update post
