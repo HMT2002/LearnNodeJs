@@ -7,6 +7,7 @@ const slugify = require('slugify');
 
 const replaceTemplate = require('./modules/replaceTemplate');
 const replaceVideoTemp = require('./modules/replaceVideo');
+const driveAPI = require('./modules//driveAPI');
 
 //#region FILES
 
@@ -59,6 +60,7 @@ const server = http.createServer((req, res) => {
 
     const output = tempOverview.replace(/{%POST_CARD%}/g, cardsHtml);
 
+    driveAPI();
     res.end(output);
   }
 
