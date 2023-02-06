@@ -8,6 +8,7 @@ const slugify = require('slugify');
 const replaceTemplate = require('./modules/replaceTemplate');
 const replaceVideoTemp = require('./modules/replaceVideo');
 const driveAPI = require('./modules//driveAPI');
+const upload = require('./modules/multerAPI');
 
 //#region FILES
 
@@ -24,6 +25,7 @@ const tempSignUp = fs.readFileSync('./templates/template-sign-up.html', 'utf-8')
 
 const postData = fs.readFileSync('./json-resources/post-data.json', 'utf-8');
 const postObj = JSON.parse(postData);
+const multer = require('multer');
 
 //#endregion
 
@@ -55,12 +57,8 @@ const server = http.createServer((req, res) => {
     });
 
     const cardsHtml = postObj.map((el) => replaceTemplate(tempCard, el)).join('');
-
     //console.log(cardsHtml);
-
     const output = tempOverview.replace(/{%POST_CARD%}/g, cardsHtml);
-
-    driveAPI();
     res.end(output);
   }
 
@@ -93,6 +91,7 @@ const server = http.createServer((req, res) => {
     res.writeHead(200, {
       'Content-type': 'text/html',
     });
+
     res.end(tempSignUp);
   }
 
@@ -136,6 +135,24 @@ const server = http.createServer((req, res) => {
 
   //Upload
   else if (path_name == '/upload') {
+    upload(req, res, function (err) {
+      if (err instanceof multer.MulterError) {
+        // A Multer error occurred when uploading.
+        res.send(err);
+      } else if (err) {
+        // An unknown error occurred when uploading.
+        res.send(err);
+      }
+
+      // Everything went fine.
+      res.writeHead(200, {
+        'Content-type': 'text/html',
+      });
+      console.log(req.file);
+      //driveAPI();
+
+      res.end('Succeed upload');
+    });
   }
 
   //Not found

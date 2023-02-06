@@ -20,14 +20,29 @@ const media = {
   mimeType: 'image/jpg',
   body: fs.createReadStream('./images/background-01.jpg'),
 };
+
+const videoMetaData = {
+  name: 'videoUploadMaterials.mp4',
+  parents: [GoogleDriveAPIFolerID],
+};
+const videoMedia = {
+  mimeType: 'video/mp4',
+  body: fs.createReadStream('./videos/Honkai Impact - 崩坏3 - Việt Nam.mp4'),
+};
+
 async function uploadFile() {
   try {
+    // const response = await driveService.files.create({
+    //   resource: fileMetaData,
+    //   media: media,
+    //   fields: 'id',
+    // });
+
     const response = await driveService.files.create({
-      resource: fileMetaData,
-      media: media,
+      resource: videoMetaData,
+      media: videoMedia,
       fields: 'id',
     });
-
     return response;
   } catch (err) {
     console.log('Upload error: ', err);
