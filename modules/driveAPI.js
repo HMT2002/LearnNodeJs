@@ -21,16 +21,16 @@ const media = {
   body: fs.createReadStream('./images/background-01.jpg'),
 };
 
-const videoMetaData = {
-  name: 'videoUploadMaterials.mp4',
-  parents: [GoogleDriveAPIFolerID],
-};
-const videoMedia = {
-  mimeType: 'video/mp4',
-  body: fs.createReadStream('./videos/Honkai Impact - 崩坏3 - Việt Nam.mp4'),
-};
+// const videoMetaData = {
+//   name: 'videoUploadMaterials.mp4',
+//   parents: [GoogleDriveAPIFolerID],
+// };
+// const videoMedia = {
+//   mimeType: 'video/mp4',
+//   body: fs.createReadStream('./videos/Honkai Impact - 崩坏3 - Việt Nam.mp4'),
+// };
 
-async function uploadFile() {
+async function uploadFile(MetaData, Media) {
   try {
     // const response = await driveService.files.create({
     //   resource: fileMetaData,
@@ -39,8 +39,8 @@ async function uploadFile() {
     // });
 
     const response = await driveService.files.create({
-      resource: videoMetaData,
-      media: videoMedia,
+      resource: MetaData,
+      media: Media,
       fields: 'id',
     });
     return response;
@@ -49,8 +49,8 @@ async function uploadFile() {
   }
 }
 
-module.exports = () => {
-  uploadFile().then((data) => {
+module.exports = async (videoMetaData, videoMedia) => {
+  await uploadFile(videoMetaData, videoMedia).then((data) => {
     console.log('This is the drive api data', data);
   });
 

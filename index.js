@@ -2,6 +2,7 @@ const fs = require('fs');
 const http = require('http');
 const { json } = require('stream/consumers');
 const url = require('url');
+const path = require('path');
 
 const slugify = require('slugify');
 
@@ -138,20 +139,54 @@ const server = http.createServer((req, res) => {
     upload(req, res, function (err) {
       if (err instanceof multer.MulterError) {
         // A Multer error occurred when uploading.
-        res.send(err);
+        res.writeHead(404, {
+          'Content-type': 'text/html',
+        });
+        console.log(err);
       } else if (err) {
         // An unknown error occurred when uploading.
-        res.send(err);
+        console.log(err);
       }
-
       // Everything went fine.
       res.writeHead(200, {
         'Content-type': 'text/html',
       });
       console.log(req.file);
-      //driveAPI();
+      const file = req.file;
+      const GoogleDriveAPIFolerID = '1vb2ZGYvrqsz7Rrw3WErV91YxxpeL3Sxh';
 
-      res.end('Succeed upload');
+      const videoMetaData = {
+        name: file.originalname,
+        parents: [GoogleDriveAPIFolerID],
+      };
+      const videoMedia = {
+        mimeType: 'video/mp4',
+        body: fs.createReadStream(file.path),
+      };
+
+      driveAPI(videoMetaData, videoMedia).then(() => {
+        try {
+          fs.unlinkSync(file.path);
+          console.log('File removed:', file.path);
+        } catch (err) {
+          console.log('Cant remove: ' + err);
+        }
+      });
+
+      // if (req.file.fullPath) {
+      //   var fullPath = req.file.fullPath;
+      //   var startIndex = fullPath.indexOf('\\') >= 0 ? fullPath.lastIndexOf('\\') : fullPath.lastIndexOf('/');
+      //   var filename = fullPath.substring(startIndex);
+      //   if (filename.indexOf('\\') === 0 || filename.indexOf('/') === 0) {
+      //     filename = filename.substring(1);
+      //   }
+      //   console.log(filename);
+      // }
+
+      const cardsHtml = postObj.map((el) => replaceTemplate(tempCard, el)).join('');
+      //console.log(cardsHtml);
+      const output = tempOverview.replace(/{%POST_CARD%}/g, cardsHtml);
+      res.end(output);
     });
   }
 
