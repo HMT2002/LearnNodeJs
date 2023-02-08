@@ -4,6 +4,7 @@ const GoogleDriveAPIFolerID = '1vb2ZGYvrqsz7Rrw3WErV91YxxpeL3Sxh';
 
 const fs = require('fs');
 const { google } = require('googleapis');
+const { resolve } = require('path');
 const auth = new google.auth.GoogleAuth({
   keyFile: './t-system-376816-d231598dc1e2.json',
   scopes: ['https://www.googleapis.com/auth/drive'],
@@ -43,6 +44,7 @@ async function uploadFile(MetaData, Media) {
       media: Media,
       fields: 'id',
     });
+    // console.log('Day la cai repone o driveapi: ', response);
     return response;
   } catch (err) {
     console.log('Upload error: ', err);
@@ -50,9 +52,11 @@ async function uploadFile(MetaData, Media) {
 }
 
 module.exports = async (videoMetaData, videoMedia) => {
-  await uploadFile(videoMetaData, videoMedia).then((data) => {
+  var dataupload = await uploadFile(videoMetaData, videoMedia).then((data) => {
     console.log('This is the drive api data', data);
+    return data;
   });
+  return dataupload;
 
   //https://drive.google.com/uc?export=view&id=1zI0LTya2FOPoa1CHEFISPhuKK3UO7-Ph
   //https://drive.google.com/uc?export=download&id=1zI0LTya2FOPoa1CHEFISPhuKK3UO7-Ph

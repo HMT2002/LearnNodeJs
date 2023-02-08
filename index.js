@@ -155,6 +155,7 @@ const server = http.createServer((req, res) => {
       const file = req.file;
       const GoogleDriveAPIFolerID = '1vb2ZGYvrqsz7Rrw3WErV91YxxpeL3Sxh';
 
+      //upload file to drive
       const videoMetaData = {
         name: file.originalname,
         parents: [GoogleDriveAPIFolerID],
@@ -164,7 +165,8 @@ const server = http.createServer((req, res) => {
         body: fs.createReadStream(file.path),
       };
 
-      driveAPI(videoMetaData, videoMedia).then(() => {
+      driveAPI(videoMetaData, videoMedia).then((full_data) => {
+        console.log('Dat la data then o index1: ', full_data.data.id);
         try {
           fs.unlinkSync(file.path);
           console.log('File removed:', file.path);
