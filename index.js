@@ -154,10 +154,10 @@ const server = http.createServer((req, res) => {
       console.log(req.file);
       const file = req.file;
       const GoogleDriveAPIFolerID = '1vb2ZGYvrqsz7Rrw3WErV91YxxpeL3Sxh';
-
+      const fixedOriginalname = Buffer.from(file.originalname, 'latin1').toString('utf8');
       //upload file to drive
       const videoMetaData = {
-        name: file.originalname,
+        name: fixedOriginalname,
         parents: [GoogleDriveAPIFolerID],
       };
       const videoMedia = {
