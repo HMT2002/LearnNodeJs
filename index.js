@@ -166,7 +166,19 @@ const server = http.createServer((req, res) => {
       };
 
       driveAPI(videoMetaData, videoMedia).then((full_data) => {
-        console.log('Dat la data then o index1: ', full_data.data.id);
+        console.log('Dat la data then o index1: ', full_data);
+        const filedrive = {
+          id_file: full_data.data.id,
+          view_link: 'https://drive.google.com/uc?export=view&id=' + full_data.data.id,
+          download_link: 'https://drive.google.com/uc?export=download&id=' + full_data.data.id,
+          full_data: full_data,
+        };
+        fs.appendFile('./json-resources/driveUpload_' + full_data.data.id + '.json', filedrive.toString(), (err) => {
+          if (err) {
+            console.error(err);
+          }
+          // file written successfully
+        });
         try {
           fs.unlinkSync(file.path);
           console.log('File removed:', file.path);

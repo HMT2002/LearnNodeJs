@@ -53,7 +53,7 @@ async function uploadFile(MetaData, Media) {
 
 module.exports = async (videoMetaData, videoMedia) => {
   var dataupload = await uploadFile(videoMetaData, videoMedia).then((data) => {
-    console.log('This is the drive api data', data);
+    //console.log('This is the drive api data', data);
     return data;
   });
   return dataupload;
