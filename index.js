@@ -123,8 +123,17 @@ const server = http.createServer((req, res) => {
     const post = postObj.find((e) => e._id.$oid === query.id);
     res.end('The post has been stored');
   }
+
   //Update post
   else if (path_name == '/update-post') {
+    //vì không phải ai vào web cũng tạo post được (chỉ có người tại nội dung mới đăng), nên phải
+    const tempCreatePost = fs.readFileSync('./templates/template-create-post.html', 'utf-8');
+    res.writeHead(200, {
+      'Content-type': 'text/html',
+    });
+    const post = postObj.find((e) => e._id.$oid === query.id);
+    res.end(tempCreatePost);
+  } else if (path_name == '/post-update') {
     const tempUpedatePost = fs.readFileSync('./templates/template-update-post.html', 'utf-8');
     res.writeHead(200, {
       'Content-type': 'text/html',
