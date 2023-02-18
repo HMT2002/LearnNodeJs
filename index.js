@@ -18,6 +18,8 @@ const tempCard = fs.readFileSync('./templates/template-card.html', 'utf-8');
 
 const tempPost = fs.readFileSync('./templates/template-post.html', 'utf-8');
 const tempVideo = fs.readFileSync('./templates/template-video.html', 'utf-8');
+const tempVideojs = fs.readFileSync('./templates/template-videojs-video.html', 'utf-8');
+
 const tempUpdateButton = fs.readFileSync('./templates/template-update-button.html', 'utf-8');
 
 const tempSignIn = fs.readFileSync('./templates/template-sign-in.html', 'utf-8');
@@ -84,8 +86,17 @@ const server = http.createServer((req, res) => {
       'Content-type': 'application/json',
     });
     res.end(quiz_data);
+  } else if (path_name == '/api/jwplayer') {
+    res.writeHead(200, {
+      'Content-type': 'text/html',
+    });
+    res.end(tempVideojs);
+  } else if (path_name == '/api/videojsplayer') {
+    res.writeHead(200, {
+      'Content-type': 'text/html',
+    });
+    res.end(tempVideojs);
   }
-
   //Sign up
   else if (path_name == '/sign-up') {
     res.writeHead(200, {
