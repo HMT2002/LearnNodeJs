@@ -19,6 +19,7 @@ const tempCard = fs.readFileSync('./templates/template-card.html', 'utf-8');
 const tempPost = fs.readFileSync('./templates/template-post.html', 'utf-8');
 const tempVideo = fs.readFileSync('./templates/template-video.html', 'utf-8');
 const tempVideojs = fs.readFileSync('./templates/template-videojs-video.html', 'utf-8');
+const tempTest = fs.readFileSync('./templates/template-test.html', 'utf-8');
 
 const tempUpdateButton = fs.readFileSync('./templates/template-update-button.html', 'utf-8');
 
@@ -95,7 +96,8 @@ const server = http.createServer((req, res) => {
     res.writeHead(200, {
       'Content-type': 'text/html',
     });
-    res.end(tempVideojs);
+    const output = tempTest.replace(/{%VIDEOJS-TEMPLATE%}/g, tempVideojs);
+    res.end(output);
   }
   //Sign up
   else if (path_name == '/sign-up') {
@@ -137,7 +139,6 @@ const server = http.createServer((req, res) => {
 
   //Update post
   else if (path_name == '/update-post') {
-    //vì không phải ai vào web cũng tạo post được (chỉ có người tại nội dung mới đăng), nên phải
     const tempCreatePost = fs.readFileSync('./templates/template-create-post.html', 'utf-8');
     res.writeHead(200, {
       'Content-type': 'text/html',
