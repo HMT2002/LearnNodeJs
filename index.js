@@ -26,7 +26,7 @@ const tempUpdateButton = fs.readFileSync('./templates/template-update-button.htm
 const tempSignIn = fs.readFileSync('./templates/template-sign-in.html', 'utf-8');
 const tempSignUp = fs.readFileSync('./templates/template-sign-up.html', 'utf-8');
 
-const postData = fs.readFileSync('./json-resources/post-data.json', 'utf-8');
+const postData = fs.readFileSync('./json-resources/posts.json', 'utf-8');
 const postObj = JSON.parse(postData);
 const multer = require('multer');
 
