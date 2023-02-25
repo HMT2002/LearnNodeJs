@@ -27,5 +27,5 @@
     "__v": 0,
     "video": "https://drive.google.com/uc?export=download&id=1Aw_auV1QFevu52YsTLgRKrhXcWidP-Yv"
   },
-  { "_id": "78asd8asd25sdf480sdf0", "title": "Test post", "content": "Test content" }
+  { "_id": { "$oid": "78asd8asd25sdf480sdf0" }, "title": "Test update post", "content": "Test update content" }
 ]
