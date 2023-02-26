@@ -5,6 +5,12 @@ const posts = JSON.parse(fs.readFileSync('./json-resources/posts.json'));
 // const client_posts = JSON.parse(fs.readFileSync('./json-resources/client_posts.json'));
 
 app.use(express.json());
+app.use((req, res, next) => {
+  req.requestTime = new Date().toISOString();
+  console.log(req.requestTime);
+  next();
+});
+
 app.get('/', (req, res) => {
   res.status(200).send('Hello');
 });
@@ -13,6 +19,7 @@ const GetAllPost = (req, res) => {
   res.status(200).json({
     status: 'success',
     result: posts.length,
+    requestTime: req.requestTime,
     data: {
       posts: posts,
     },
