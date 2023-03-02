@@ -29,11 +29,11 @@
     <div class="div_Main" name="div_Main" id="div_Main">
       <div class="div_Display" name="div_Display" id="div_Display">
         <div>
-          <form method="post" action="/api/v1/post/?id={%POSTID%}" enctype="multipart/form-data">
+          <form method="post" action="/upload" enctype="multipart/form-data">
             <label for="Title">nhập tiêu đề</label>
             <textarea class="Title" type="text"></textarea>
             <br />
-            <input type="file" id="image" accept=".mp4, .mkv, .flv|video/*" multiple value="Chọn video" />
+            <input name="file" type="file" id="image" accept=".mp4, .mkv, .flv|video/*" multiple value="Chọn video" />
             <br />
             <label for="Content">nhập nội dung</label>
             <textarea class="Content" type="text"> </textarea>

@@ -32,6 +32,8 @@ exports.CheckInput = (req, res, next, value) => {
 };
 
 exports.GetAllPosts = (req, res) => {
+  console.log(posts);
+
   res.status(200).json({
     status: 'success',
     result: posts.length,
