@@ -6,7 +6,7 @@ import PostCard from './PostCard';
 function ListPostCard(props) {
   const [list, setList] = useState(props.posts);
 
-  console.log(list);
+  //console.log(list);
   return (
     <div>
       {list.map((post) => (
