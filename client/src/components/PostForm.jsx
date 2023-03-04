@@ -22,22 +22,45 @@ const PostForm = () => {
   const tagChangeHandler = (event) => {
     setEnteredTag(event.target.value);
   };
+
+  const submitChangeHandler = (event) => {
+    event.preventDefault();
+
+    const postData = {
+      title: enteredTitle,
+      video: enteredVideo,
+      content: enteredContent,
+      tag: enteredTag,
+
+      createDate: Date.now(),
+    };
+
+    console.log(postData);
+
+    setEnteredTitle('');
+    setEnteredVideo('');
+
+    setEnteredContent('');
+
+    setEnteredTag('');
+  };
+
   return (
-    <form>
+    <form method="post" onSubmit={submitChangeHandler}>
       <div className="new-post__controls">
         <div className="new-post__controls">
           <label>Title</label>
-          <input type="text" onChange={titleChangeHandler} />
+          <input type="text" onChange={titleChangeHandler} value={enteredTitle} />
         </div>
 
         <div className="new-post__controls">
           <label>Explain Video</label>
-          <input type="file" onChange={contentChangeHandler} />
+          <input type="file" onChange={videoChangeHandler} value={enteredVideo} />
         </div>
 
         <div className="new-post__controls">
           <label>Content</label>
-          <input type="text" onChange={videoChangeHandler} />
+          <input type="text" onChange={contentChangeHandler} value={enteredContent} />
         </div>
         <div className="new-post__controls">
           <label>Choose a car:</label>

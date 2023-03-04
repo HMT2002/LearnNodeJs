@@ -1,5 +1,6 @@
 const fs = require('fs');
 const posts = JSON.parse(fs.readFileSync('./json-resources/posts.json'));
+const posts_test = JSON.parse(fs.readFileSync('./json-resources/posts_test.json'));
 
 exports.CheckID = (req, res, next, value) => {
   console.log('ID value is: ' + value);
@@ -69,6 +70,31 @@ exports.CreateNewPost = (req, res) => {
   fs.writeFile('./json-resources/posts.json', JSON.stringify(posts), (err) => {
     res.status(201).json({
       status: 'success create',
+    });
+  });
+};
+
+exports.CreateNewPostTest = (req, res) => {
+  //console.log(req);
+  console.log(req.params);
+  console.log(req.body);
+
+  var numberID = posts_test.length + 1;
+  const newID = 'posts_' + numberID;
+  const newPost = Object.assign({ _id: newID }, req.body);
+
+  posts_test.push(newPost);
+  fs.writeFile('./json-resources/posts_test.json', JSON.stringify(posts_test), (err) => {
+    if (err) {
+      res.status(400).json({
+        status: 'failed',
+        message: 'bad request ' + err,
+      });
+    }
+
+    res.status(201).json({
+      status: 'success create',
+      new_post: newPost,
     });
   });
 };
