@@ -23,10 +23,12 @@ app.use((req, res, next) => {
 const postRouter = require('./routes/postRoute');
 const userRouter = require('./routes/userRoute');
 const signRouter = require('./routes/signRoute');
+const testRoute = require('./routes/testRoute');
 
 app.use('/', postRouter);
 app.use('/api/v1/posts', postRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/sign', signRouter);
+app.use('/api/test', testRoute);
 
 module.exports = app;

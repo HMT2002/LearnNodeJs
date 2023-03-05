@@ -44,7 +44,7 @@ const formidable = require('formidable');
 //#region SERVER
 
 const slugs = postObj.map((el) => {
-  return slugify(el._id.$oid, { lower: true });
+  return slugify(el.id, { lower: true });
 });
 console.log(slugs);
 
@@ -294,23 +294,23 @@ const server = http.createServer((req, res) => {
   }
 });
 
-app.post('/upload', function (req, res) {
-  const GoogleDriveAPIFolerID = '1vb2ZGYvrqsz7Rrw3WErV91YxxpeL3Sxh';
+// app.post('/upload', function (req, res) {
+//   const GoogleDriveAPIFolerID = '1vb2ZGYvrqsz7Rrw3WErV91YxxpeL3Sxh';
 
-  const videoMetaData = {
-    name: 'randomshit',
-    parents: [GoogleDriveAPIFolerID],
-  };
-  const videoMedia = {
-    mimeType: 'video/mp4',
-    body: fs.createReadStream('C:\\Users\\blues\\Videos\\八王子P × Giga「Gimme×Gimme feat. 初音ミク・鏡音リン」.mp4'),
-  };
+//   const videoMetaData = {
+//     name: 'randomshit',
+//     parents: [GoogleDriveAPIFolerID],
+//   };
+//   const videoMedia = {
+//     mimeType: 'video/mp4',
+//     body: fs.createReadStream('C:\\Users\\blues\\Videos\\八王子P × Giga「Gimme×Gimme feat. 初音ミク・鏡音リン」.mp4'),
+//   };
 
-  driveAPI(videoMetaData, videoMedia).then((full_data) => {
-    console.log(full_data);
-  });
-  res.end('done');
-});
+//   driveAPI(videoMetaData, videoMedia).then((full_data) => {
+//     console.log(full_data);
+//   });
+//   res.end('done');
+// });
 
 server.listen(9000, '127.0.0.1', () => {
   console.log('Listening gsdfgdsdfsto request on 9000');

@@ -46,7 +46,7 @@ const PostForm = () => {
   };
 
   return (
-    <form method="post" onSubmit={submitChangeHandler}>
+    <form method="post" action="/api/test/upload" encType="multipart/form-data">
       <div className="new-post__controls">
         <div className="new-post__controls">
           <label>Title</label>
@@ -55,7 +55,7 @@ const PostForm = () => {
 
         <div className="new-post__controls">
           <label>Explain Video</label>
-          <input type="file" onChange={videoChangeHandler} value={enteredVideo} />
+          <input id="myFile" name="myFile" type="file" onChange={videoChangeHandler} value={enteredVideo} />
         </div>
 
         <div className="new-post__controls">
