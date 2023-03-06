@@ -4,18 +4,22 @@ import Card from './Card';
 import './PostCard.css';
 
 function PostCard(props) {
-  const [title, setTitle] = useState(props.title);
-  const [user, setUser] = useState(props.user);
+  const [title, setTitle] = useState(props.post.title);
+  const [user, setUser] = useState(props.post.user);
+  const [content, setContent] = useState(props.post.content);
 
+  const titleClickedHandler = () => {
+    setTitle('Updated!');
+    console.log(title);
+  };
   return (
-    <div>
-      <Card>
-        <figure>
-          <div>{title}</div>
-          <div>{user}</div>
-        </figure>
-      </Card>
-    </div>
+    <Card>
+      <figure>
+        <p onClick={titleClickedHandler}>{title}</p>
+        <p>{user}</p>
+        <p>{content}</p>
+      </figure>
+    </Card>
   );
 }
 

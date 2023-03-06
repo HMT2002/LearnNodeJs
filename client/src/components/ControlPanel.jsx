@@ -2,9 +2,9 @@ import './ControlPanel.css';
 
 function ControllPanel(props) {
   return (
-    <div class="p-navEl is-selected" data-has-children="true">
-      <div class="menu menu--structural" data-menu="menu" aria-hidden="true">
-        <div class="menu-content">
+    <div className="p-navEl is-selected" data-has-children="true">
+      <div className="menu menu--structural" data-menu="menu" aria-hidden="true">
+        <div className="menu-content">
           <ul className="p-sectionLinks-list">
             <li>
               <a href="/whats-new/posts/">New posts</a>

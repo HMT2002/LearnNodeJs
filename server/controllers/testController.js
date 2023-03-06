@@ -3,6 +3,7 @@ const path = require('path');
 const users = JSON.parse(fs.readFileSync('./json-resources/users.json'));
 const helperAPI = require('../modules/helperAPI');
 const driveAPI = require('../modules/driveAPI');
+const posts_test = JSON.parse(fs.readFileSync('./json-resources/posts_test.json'));
 
 exports.CheckID = (req, res, next, value) => {
   console.log('ID value is: ' + value);
@@ -64,6 +65,35 @@ exports.UploadNewFile = (req, res) => {
       if (err) throw err;
       console.log('File deleted!');
       res.end(full_data.data.id);
+    });
+  });
+};
+
+exports.GetAllPosts = (req, res) => {
+  console.log(posts_test);
+
+  res.status(200).json({
+    status: 'success',
+    result: posts_test.length,
+    requestTime: req.requestTime,
+    data: {
+      posts: posts_test,
+    },
+  });
+};
+
+exports.CreateNewPost = (req, res) => {
+  console.log('api/test/posts ');
+  console.log(req.body);
+
+  var numberID = posts_test.length + 1;
+  const newID = 'posts_' + numberID;
+  const newPost = Object.assign({ id: newID }, { user: 'Test user_1' }, req.body);
+  console.log(newPost);
+  posts_test.push(newPost);
+  fs.writeFile('./json-resources/posts_test.json', JSON.stringify(posts_test), (err) => {
+    res.status(201).json({
+      status: 'success create',
     });
   });
 };

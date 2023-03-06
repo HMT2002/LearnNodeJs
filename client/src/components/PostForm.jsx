@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 
 import './PostForm.css';
-const PostForm = () => {
+const PostForm = (props) => {
   const [enteredTitle, setEnteredTitle] = useState('');
   const [enteredContent, setEnteredContent] = useState('');
-  const [enteredVideo, setEnteredVideo] = useState();
+  const [enteredVideo, setEnteredVideo] = useState('');
   const [enteredTag, setEnteredTag] = useState('');
 
   const titleChangeHandler = (event) => {
@@ -27,26 +27,26 @@ const PostForm = () => {
     event.preventDefault();
 
     const postData = {
+      id: Math.random().toString(),
       title: enteredTitle,
       video: enteredVideo,
+      user: 'user post',
       content: enteredContent,
       tag: enteredTag,
-
       createDate: Date.now(),
     };
 
-    console.log(postData);
-
     setEnteredTitle('');
     setEnteredVideo('');
-
     setEnteredContent('');
-
     setEnteredTag('');
+    console.log('submitHandler called');
+
+    props.onSavePostData(postData);
   };
 
   return (
-    <form method="post" action="/api/test/upload" encType="multipart/form-data">
+    <form onSubmit={submitChangeHandler}>
       <div className="new-post__controls">
         <div className="new-post__controls">
           <label>Title</label>
@@ -64,7 +64,7 @@ const PostForm = () => {
         </div>
         <div className="new-post__controls">
           <label>Choose a car:</label>
-          <select onChange={tagChangeHandler}>
+          <select onChange={tagChangeHandler} value={enteredTag}>
             <option>Đời sống</option>
             <option>Kỹ thuật</option>
             <option>Mỹ thuật</option>

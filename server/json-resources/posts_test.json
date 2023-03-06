@@ -1,1 +1,29 @@
-[{"_id":"posts_1"},{"_id":"posts_2"},{"_id":"posts_3"},{"_id":"posts_4"},{"_id":"posts_5"},{"_id":"posts_6","title":"Test post","content":"Test content"},{"_id":"posts_7"}]
+[
+  {
+    "id": "posts_1",
+    "content": "test content render",
+    "title": "test title render",
+    "user": "Test user_1",
+    "createDate": "",
+    "tag": "",
+    "video": ""
+  },
+  {
+    "id": "posts_2",
+    "user": "Test user_1",
+    "content": "test content render",
+    "createDate": "",
+    "tag": "",
+    "video": "",
+    "title": "test title render"
+  },
+  {
+    "id": "posts_3",
+    "user": "Test user_1",
+    "content": "test content render",
+    "createDate": "",
+    "title": "test title render",
+    "tag": "",
+    "video": ""
+  }
+]
