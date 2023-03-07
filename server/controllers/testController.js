@@ -3,7 +3,7 @@ const path = require('path');
 const users = JSON.parse(fs.readFileSync('./json-resources/users.json'));
 const helperAPI = require('../modules/helperAPI');
 const driveAPI = require('../modules/driveAPI');
-const posts_test = JSON.parse(fs.readFileSync('./json-resources/posts_test.json'));
+const threads_test = JSON.parse(fs.readFileSync('./json-resources/threads_test.json'));
 
 exports.CheckID = (req, res, next, value) => {
   console.log('ID value is: ' + value);
@@ -69,29 +69,43 @@ exports.UploadNewFile = (req, res) => {
   });
 };
 
-exports.GetAllPosts = (req, res) => {
-  console.log(posts_test);
+const mongoose = require('mongoose');
 
+const threadSchema = new mongoose.Schema({
+  title: { type: String, required: [true, 'Thread required'] },
+  content: { type: String, required: [true, 'Thread required'] },
+  user: { type: String, default: 'Test User' },
+  createDate: { type: Date, required: false },
+  tag: { type: String, required: [true, 'Thread required'] },
+  video: { type: String, required: [true, 'Thread required'] },
+});
+const Thread = mongoose.model('Thread', threadSchema);
+
+exports.GetAllThreads = async (req, res) => {
+  //console.log(threads_test);
+
+  const threads = await Thread.find({});
+  console.log(threads);
   res.status(200).json({
     status: 'success',
-    result: posts_test.length,
+    result: threads_test.length,
     requestTime: req.requestTime,
     data: {
-      posts: posts_test,
+      threads: threads,
     },
   });
 };
 
-exports.CreateNewPost = (req, res) => {
-  console.log('api/test/posts ');
+exports.CreateNewThread = (req, res) => {
+  console.log('api/test/threads ');
   console.log(req.body);
 
-  var numberID = posts_test.length + 1;
-  const newID = 'posts_' + numberID;
-  const newPost = Object.assign({ id: newID }, { user: 'Test user_1' }, req.body);
-  console.log(newPost);
-  posts_test.push(newPost);
-  fs.writeFile('./json-resources/posts_test.json', JSON.stringify(posts_test), (err) => {
+  var numberID = threads_test.length + 1;
+  const newID = 'threads_' + numberID;
+  const newThread = Object.assign({ id: newID }, { user: 'Test user_1' }, req.body);
+  console.log(newThread);
+  threads_test.push(newThread);
+  fs.writeFile('./json-resources/threads_test.json', JSON.stringify(threads_test), (err) => {
     res.status(201).json({
       status: 'success create',
     });

@@ -1,47 +1,47 @@
 import './App.css';
 import React, { useState, useEffect, useCallback } from 'react';
 import ControllPanel from './components/ControlPanel';
-import ListPostCard from './components/ListPostCard';
-import NewPost from './components/NewPost';
-import PostCard from './components/PostCard';
+import ListThreadCard from './components/ListThreadCard';
+import NewThread from './components/NewThread';
 
 const DUMMY_POSTS = [];
 
 function App() {
-  const [posts, setPosts] = useState(DUMMY_POSTS);
+  const [threads, setThreads] = useState(DUMMY_POSTS);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const fetchPostHandler = useCallback(async () => {
+  const fetchThreadHandler = useCallback(async () => {
     setError(null);
     setIsLoading(true);
     try {
-      const response = await fetch('/api/test/posts');
+      const response = await fetch('/api/test/threads');
       if (!response.ok) {
         throw new Error('Something went wrong!');
       }
       const data = await response.json();
 
-      setPosts((prevPosts) => {
-        return [...data.data.posts, ...prevPosts];
+      //console.log(data);
+      setThreads((prevThreads) => {
+        return [...data.data.threads, ...prevThreads];
       });
-      setPosts(data.data.posts);
+      //setThreads(data.data.threads);
     } catch (error) {
       setError(error.message);
     }
     setIsLoading(false);
   }, []);
   useEffect(() => {
-    fetchPostHandler();
-  }, [fetchPostHandler]);
+    fetchThreadHandler();
+  }, [fetchThreadHandler]);
 
-  const addPostHandler = async (post) => {
+  const addThreadHandler = async (thread) => {
     setIsLoading(true);
 
-    await setPosts((prevPosts) => {
-      return [post, ...prevPosts];
+    await setThreads((prevThreads) => {
+      return [thread, ...prevThreads];
     });
 
-    console.log(posts);
+    console.log(thread);
     setIsLoading(false);
   };
 
@@ -50,19 +50,19 @@ function App() {
       <div className="App">
         <header className="App-header">
           <section>
-            <button onClick={fetchPostHandler}>Fetch</button>
+            <button onClick={fetchThreadHandler}>Fetch</button>
           </section>
           <section>
             <section>
               <ControllPanel />
             </section>
             <section>
-              {!isLoading && posts.length > 0 && !error && <ListPostCard posts={posts} />}
+              {!isLoading && !error && <ListThreadCard threads={threads} />}
               {isLoading && <p>Loading...</p>}
               {!isLoading && error && <p>{error}</p>}
             </section>
             <section>
-              <NewPost onAddPost={addPostHandler}></NewPost>
+              <NewThread onAddThread={addThreadHandler}></NewThread>
             </section>
           </section>
         </header>

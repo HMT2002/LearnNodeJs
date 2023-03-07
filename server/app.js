@@ -20,13 +20,13 @@ app.use((req, res, next) => {
 });
 
 //ROUTES
-const postRouter = require('./routes/postRoute');
+const threadRouter = require('./routes/threadRoute');
 const userRouter = require('./routes/userRoute');
 const signRouter = require('./routes/signRoute');
 const testRoute = require('./routes/testRoute');
 
-app.use('/', postRouter);
-app.use('/api/v1/posts', postRouter);
+app.use('/', threadRouter);
+app.use('/api/v1/threads', threadRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/sign', signRouter);
 app.use('/api/test', testRoute);

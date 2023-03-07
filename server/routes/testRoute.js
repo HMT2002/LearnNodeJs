@@ -1,6 +1,6 @@
 const express = require('express');
 const testController = require('../controllers/testController');
-const postController = require('../controllers/postController');
+const threadController = require('../controllers/threadController');
 const signController = require('../controllers/signController');
 const userController = require('../controllers/userController');
 const upload = require('../modules/multerAPI.js');
@@ -13,7 +13,7 @@ router.param('id', signController.CheckID);
 router.route('/').post(signController.CheckID, signController.CheckInput, signController.SignUp);
 
 router.route('/upload').post(upload, testController.UploadNewFile);
-router.route('/posts').get(testController.GetAllPosts).post(testController.CreateNewPost);
+router.route('/threads').get(testController.GetAllThreads).post(testController.CreateNewThread);
 
 router.route('/:id').post(signController.CheckID, signController.CheckInput, signController.SignIn);
 router.route('/:id/out').post(signController.CheckID, signController.CheckInput, signController.SignOut);
