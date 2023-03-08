@@ -35,17 +35,18 @@ exports.CheckInput = (req, res, next, value) => {
   next();
 };
 
-exports.UploadNewFile = (req, res) => {
+exports.UploadNewFile = async (req, res) => {
+  //console.log(req);
   const file = req.file;
 
-  console.log(file);
+  // console.log(file);
   const fileID = helperAPI.GenerrateRandomString(15);
 
   const fileExtension = path.extname(file.path);
-  console.log(fileExtension);
+  // console.log(fileExtension);
 
   const driveFileName = fileID + fileExtension;
-  console.log(driveFileName);
+  // console.log(driveFileName);
 
   const GoogleDriveAPIFolerID = '1vb2ZGYvrqsz7Rrw3WErV91YxxpeL3Sxh';
 
@@ -58,28 +59,22 @@ exports.UploadNewFile = (req, res) => {
     body: fs.createReadStream(file.path),
   };
 
-  driveAPI(videoMetaData, videoMedia).then((full_data) => {
-    console.log(full_data);
+  const driveAPIResponse = await driveAPI(videoMetaData, videoMedia);
 
-    fs.unlink(file.path, function (err) {
-      if (err) throw err;
-      console.log('File deleted!');
-      res.end(full_data.data.id);
-    });
+  const driveID = driveAPIResponse.data.id;
+  fs.unlink(file.path, function (err) {
+    if (err) throw err;
+    console.log('File deleted!');
+  });
+
+  console.log(driveID);
+  res.status(201).json({
+    status: 'success upload',
+    driveID: driveID,
   });
 };
 
-const mongoose = require('mongoose');
-
-const threadSchema = new mongoose.Schema({
-  title: { type: String, required: [true, 'Thread required'] },
-  content: { type: String, required: [true, 'Thread required'] },
-  user: { type: String, default: 'Test User' },
-  createDate: { type: Date, required: false },
-  tag: { type: String, required: [true, 'Thread required'] },
-  video: { type: String, required: [true, 'Thread required'] },
-});
-const Thread = mongoose.model('Thread', threadSchema);
+const Thread = require('../models/mongo/Thread');
 
 exports.GetAllThreads = async (req, res) => {
   //console.log(threads_test);
@@ -96,18 +91,23 @@ exports.GetAllThreads = async (req, res) => {
   });
 };
 
-exports.CreateNewThread = (req, res) => {
+exports.CreateNewThread = async (req, res) => {
   console.log('api/test/threads ');
   console.log(req.body);
 
-  var numberID = threads_test.length + 1;
-  const newID = 'threads_' + numberID;
-  const newThread = Object.assign({ id: newID }, { user: 'Test user_1' }, req.body);
-  console.log(newThread);
-  threads_test.push(newThread);
-  fs.writeFile('./json-resources/threads_test.json', JSON.stringify(threads_test), (err) => {
-    res.status(201).json({
-      status: 'success create',
+  const newThreadMongo = new Thread(req.body);
+
+  const response_data = await newThreadMongo
+    .save()
+    .then((doc) => {
+      console.log(doc);
+      return doc;
+    })
+    .catch((err) => {
+      console.log(err);
     });
+  res.status(201).json({
+    status: 'success create',
+    data: response_data,
   });
 };

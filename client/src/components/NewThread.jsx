@@ -4,13 +4,11 @@ import ThreadForm from './ThreadForm';
 import React from 'react';
 
 const NewThread = (props) => {
-  const saveThreadDataHandler = (enteredThreadData) => {
+  const saveThreadDataHandler = (enteredThreadData, error) => {
     const threadData = {
       ...enteredThreadData,
     };
-    console.log('saveThreadDataHandler called');
-
-    props.onAddThread(threadData);
+    props.onAddThread(threadData, error);
   };
 
   return (

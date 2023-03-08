@@ -10,6 +10,7 @@ function App() {
   const [threads, setThreads] = useState(DUMMY_POSTS);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+
   const fetchThreadHandler = useCallback(async () => {
     setError(null);
     setIsLoading(true);
@@ -19,31 +20,51 @@ function App() {
         throw new Error('Something went wrong!');
       }
       const data = await response.json();
-
-      //console.log(data);
+      console.log(data);
       setThreads((prevThreads) => {
-        return [...data.data.threads, ...prevThreads];
+        return [...data.data.threads];
       });
-      //setThreads(data.data.threads);
     } catch (error) {
       setError(error.message);
     }
     setIsLoading(false);
   }, []);
+
   useEffect(() => {
     fetchThreadHandler();
   }, [fetchThreadHandler]);
 
-  const addThreadHandler = async (thread) => {
-    setIsLoading(true);
+  const addThreadHandler = useCallback(async (thread, error) => {
+    try {
+      setIsLoading(true);
 
-    await setThreads((prevThreads) => {
-      return [thread, ...prevThreads];
-    });
+      //console.log(thread);
 
-    console.log(thread);
+      //console.log(error);
+      if (error != null) {
+        throw new Error(error);
+      }
+      const response = await fetch('/api/test/threads', {
+        method: 'POST',
+        body: JSON.stringify(thread),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const response_data = await response.json();
+      console.log(response_data);
+
+      // setThreads((prevThreads) => {
+      //   return [response_data.data, ...prevThreads];
+      // });
+    } catch (err) {
+      console.log(err.message);
+    }
+    await fetchThreadHandler();
+
     setIsLoading(false);
-  };
+  }, []);
 
   return (
     <React.Fragment>
