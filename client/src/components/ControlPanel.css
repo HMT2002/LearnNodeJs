@@ -1,12 +1,14 @@
 .a {
   padding: 10px;
 }
-ul {
+.p-sectionLinks-list {
   list-style-type: none;
   margin: 0;
   padding: 0;
   overflow: hidden;
   background-color: #333333;
+  text-align: center;
+  display: inline-block;
 }
 
 li {

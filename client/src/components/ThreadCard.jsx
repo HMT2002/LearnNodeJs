@@ -9,13 +9,16 @@ function ThreadCard(props) {
   const [content, setContent] = useState(props.thread.content);
 
   const titleClickedHandler = () => {
-    setTitle('Updated!');
+    //setTitle('Updated!');
     console.log(title);
   };
+  const cardClickedHandler = () => {
+    console.log('Card ' + title + ' Clicked');
+  };
   return (
-    <Card>
+    <Card onClick={cardClickedHandler}>
       <figure>
-        <p onClick={titleClickedHandler}>{title}</p>
+        <p>{title}</p>
         <p>{user}</p>
         <p>{content}</p>
       </figure>

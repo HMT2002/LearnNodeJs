@@ -28,7 +28,7 @@ const ThreadForm = (props) => {
 
     let formData = new FormData();
     formData.append('myFile', event.target.files[0]);
-    const response = await fetch('/api/test/upload', {
+    const response = await fetch('/api/v1/upload', {
       method: 'POST',
       body: formData,
     });

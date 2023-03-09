@@ -1,6 +1,8 @@
 const fs = require('fs');
 const threads = JSON.parse(fs.readFileSync('./json-resources/threads.json'));
 const threads_test = JSON.parse(fs.readFileSync('./json-resources/threads_test.json'));
+const Thread = require('../models/mongo/Thread');
+const driveAPI = require('../modules/driveAPI');
 
 exports.CheckID = (req, res, next, value) => {
   console.log('ID value is: ' + value);
@@ -32,16 +34,57 @@ exports.CheckInput = (req, res, next, value) => {
   next();
 };
 
-exports.GetAllThreads = (req, res) => {
-  console.log(threads);
+exports.GetAllThreads = async (req, res) => {
+  //console.log(threads_test);
 
+  const threads = await Thread.find({});
+  console.log(threads);
   res.status(200).json({
     status: 'success',
-    result: threads.length,
+    result: threads_test.length,
     requestTime: req.requestTime,
     data: {
       threads: threads,
     },
+  });
+};
+
+exports.UploadNewFile = async (req, res) => {
+  //console.log(req);
+  const file = req.file;
+
+  // console.log(file);
+  const fileID = helperAPI.GenerrateRandomString(15);
+
+  const fileExtension = path.extname(file.path);
+  // console.log(fileExtension);
+
+  const driveFileName = fileID + fileExtension;
+  // console.log(driveFileName);
+
+  const GoogleDriveAPIFolerID = '1vb2ZGYvrqsz7Rrw3WErV91YxxpeL3Sxh';
+
+  const videoMetaData = {
+    name: driveFileName,
+    parents: [GoogleDriveAPIFolerID],
+  };
+  const videoMedia = {
+    mimeType: file.mimetype,
+    body: fs.createReadStream(file.path),
+  };
+
+  const driveAPIResponse = await driveAPI(videoMetaData, videoMedia);
+
+  const driveID = driveAPIResponse.data.id;
+  fs.unlink(file.path, function (err) {
+    if (err) throw err;
+    console.log('File deleted!');
+  });
+
+  console.log(driveID);
+  res.status(201).json({
+    status: 'success upload',
+    driveID: driveID,
   });
 };
 
@@ -59,43 +102,23 @@ exports.GetThread = (req, res) => {
   });
 };
 
-exports.CreateNewThread = (req, res) => {
-  console.log(req.params);
-
-  var numberID = threads.length + 1;
-  const newID = 'threads_' + numberID;
-  const newThread = Object.assign({ _id: newID }, req.body);
-  console.log(newThread);
-  threads.push(newThread);
-  fs.writeFile('./json-resources/threads.json', JSON.stringify(threads), (err) => {
-    res.status(201).json({
-      status: 'success create',
-    });
-  });
-};
-
-exports.CreateNewThreadTest = (req, res) => {
-  //console.log(req);
+exports.CreateNewThread = async (req, res) => {
+  console.log('api/v1/threads ');
   console.log(req.params);
   console.log(req.body);
-
-  var numberID = threads_test.length + 1;
-  const newID = 'threads_' + numberID;
-  const newThread = Object.assign({ _id: newID }, req.body);
-
-  threads_test.push(newThread);
-  fs.writeFile('./json-resources/threads_test.json', JSON.stringify(threads_test), (err) => {
-    if (err) {
-      res.status(400).json({
-        status: 'failed',
-        message: 'bad request ' + err,
-      });
-    }
-
-    res.status(201).json({
-      status: 'success create',
-      new_thread: newThread,
+  const newThreadMongo = new Thread(req.body);
+  const response_data = await newThreadMongo
+    .save()
+    .then((doc) => {
+      console.log(doc);
+      return doc;
+    })
+    .catch((err) => {
+      console.log(err);
     });
+  res.status(201).json({
+    status: 'success create',
+    data: response_data,
   });
 };
 

@@ -1,91 +1,80 @@
 import './App.css';
 import React, { useState, useEffect, useCallback } from 'react';
-import ControllPanel from './components/ControlPanel';
-import ListThreadCard from './components/ListThreadCard';
-import NewThread from './components/NewThread';
 
-const DUMMY_POSTS = [];
+import NewThread from './pages/NewThread';
+import Welcome from './pages/Welcome';
+import TestPage from './pages/TestPage';
+import SignIn from './pages/SignIn';
+import SignUp from './pages/SignUp';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 function App() {
-  const [threads, setThreads] = useState(DUMMY_POSTS);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  // const [threads, setThreads] = useState([]);
+  // const [isLoading, setIsLoading] = useState(false);
+  // const [error, setError] = useState(null);
 
-  const fetchThreadHandler = useCallback(async () => {
-    setError(null);
-    setIsLoading(true);
-    try {
-      const response = await fetch('/api/test/threads');
-      if (!response.ok) {
-        throw new Error('Something went wrong!');
-      }
-      const data = await response.json();
-      console.log(data);
-      setThreads((prevThreads) => {
-        return [...data.data.threads];
-      });
-    } catch (error) {
-      setError(error.message);
-    }
-    setIsLoading(false);
-  }, []);
+  // const fetchThreadHandler = useCallback(async () => {
+  //   setError(null);
+  //   setIsLoading(true);
+  //   try {
+  //     const response = await fetch('/api/test/threads');
+  //     if (!response.ok) {
+  //       throw new Error('Something went wrong!');
+  //     }
+  //     const data = await response.json();
+  //     console.log(data);
+  //     setThreads((prevThreads) => {
+  //       return [...data.data.threads];
+  //     });
+  //   } catch (error) {
+  //     setError(error.message);
+  //   }
+  //   setIsLoading(false);
+  // }, []);
 
-  useEffect(() => {
-    fetchThreadHandler();
-  }, [fetchThreadHandler]);
+  // useEffect(() => {
+  //   fetchThreadHandler();
+  // }, [fetchThreadHandler]);
 
-  const addThreadHandler = useCallback(async (thread, error) => {
-    try {
-      setIsLoading(true);
-
-      //console.log(thread);
-
-      //console.log(error);
-      if (error != null) {
-        throw new Error(error);
-      }
-      const response = await fetch('/api/test/threads', {
-        method: 'POST',
-        body: JSON.stringify(thread),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      const response_data = await response.json();
-      console.log(response_data);
-
-      // setThreads((prevThreads) => {
-      //   return [response_data.data, ...prevThreads];
-      // });
-    } catch (err) {
-      console.log(err.message);
-    }
-    await fetchThreadHandler();
-
-    setIsLoading(false);
-  }, []);
+  // const addThreadHandler = useCallback(async (thread, error) => {
+  //   try {
+  //     setIsLoading(true);
+  //     //console.log(thread);
+  //     //console.log(error);
+  //     if (error != null) {
+  //       throw new Error(error);
+  //     }
+  //     const response = await fetch('/api/v1/threads', {
+  //       method: 'POST',
+  //       body: JSON.stringify(thread),
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //     });
+  //     const response_data = await response.json();
+  //     console.log(response_data);
+  //     // setThreads((prevThreads) => {
+  //     //   return [response_data.data, ...prevThreads];
+  //     // });
+  //   } catch (err) {
+  //     console.log(err.message);
+  //     setError(err.message);
+  //   }
+  //   await fetchThreadHandler();
+  //   setIsLoading(false);
+  // }, []);
 
   return (
     <React.Fragment>
       <div className="App">
         <header className="App-header">
-          <section>
-            <button onClick={fetchThreadHandler}>Fetch</button>
-          </section>
-          <section>
-            <section>
-              <ControllPanel />
-            </section>
-            <section>
-              {!isLoading && !error && <ListThreadCard threads={threads} />}
-              {isLoading && <p>Loading...</p>}
-              {!isLoading && error && <p>{error}</p>}
-            </section>
-            <section>
-              <NewThread onAddThread={addThreadHandler}></NewThread>
-            </section>
-          </section>
+          <Routes>
+            <Route path="/" element={<Welcome />}></Route>
+            <Route path="/create-thread" element={<NewThread />}></Route>
+            <Route path="/test" element={<TestPage />}></Route>
+            <Route path="/sign/in" element={<SignIn />}></Route>
+            <Route path="/sign/up" element={<SignUp />}></Route>
+          </Routes>
         </header>
       </div>
     </React.Fragment>
