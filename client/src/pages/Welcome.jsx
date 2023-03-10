@@ -10,7 +10,7 @@ const Welcome = () => {
   const [error, setError] = useState(null);
   const [threads, setThreads] = useState([]);
 
-  const fetchThreadHandler = useCallback(async () => {
+  const fetchThreadsHandler = useCallback(async () => {
     setError(null);
     setIsLoading(true);
     try {
@@ -30,8 +30,8 @@ const Welcome = () => {
   }, []);
 
   useEffect(() => {
-    fetchThreadHandler();
-  }, [fetchThreadHandler]);
+    fetchThreadsHandler();
+  }, [fetchThreadsHandler]);
 
   return (
     <section>

@@ -1,13 +1,15 @@
 const fs = require('fs');
+const path = require('path');
+
 const threads = JSON.parse(fs.readFileSync('./json-resources/threads.json'));
 const threads_test = JSON.parse(fs.readFileSync('./json-resources/threads_test.json'));
 const Thread = require('../models/mongo/Thread');
 const driveAPI = require('../modules/driveAPI');
+const helperAPI = require('../modules/helperAPI');
 
-exports.CheckID = (req, res, next, value) => {
+exports.CheckSlug = async (req, res, next, value) => {
   console.log('ID value is: ' + value);
-  const thread = threads.find((el) => el._id.$oid === value);
-
+  const thread = await Thread.findOne({ slug: value });
   if (thread === undefined || !thread) {
     return res.status(401).json({
       status: 'failed',
@@ -88,11 +90,12 @@ exports.UploadNewFile = async (req, res) => {
   });
 };
 
-exports.GetThread = (req, res) => {
+exports.GetThread = async (req, res) => {
   console.log(req.params);
 
-  const id = req.params.id;
-  const thread = threads.find((el) => el._id.$oid === id);
+  const slug = req.params.slug;
+
+  const thread = await Thread.findOne({ slug: slug });
 
   res.status(200).json({
     status: 'success',
@@ -124,7 +127,7 @@ exports.CreateNewThread = async (req, res) => {
 
 exports.UpdateThread = (req, res) => {
   console.log(req.params);
-  const id = req.params.id;
+  const id = req.params.slug;
   const threadIndex = threads.findIndex((el) => el._id.$oid === id);
 
   threads[threadIndex] = req.body;
@@ -141,7 +144,7 @@ exports.UpdateThread = (req, res) => {
 
 exports.DeleteThread = (req, res) => {
   console.log(req.params);
-  const id = req.params.id;
+  const id = req.params.slug;
   const threadIndex = threads.findIndex((el) => el._id.$oid === id);
 
   res.status(204).json({

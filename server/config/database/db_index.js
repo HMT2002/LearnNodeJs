@@ -1,10 +1,15 @@
 const mongoose = require('mongoose');
 
-const DB = process.env.DATABASE.replace('<PASSWORD>', process.env.DATABASE_PASSWORD);
+const DB_LOCAL = 'mongodb://127.0.0.1:27017/';
+const DB_CLOUD = process.env.DATABASE.replace('<PASSWORD>', process.env.DATABASE_PASSWORD);
 
 const connect = async () => {
   try {
-    await mongoose.connect(DB, {}).then((con) => {
+    // await mongoose.connect(DB_CLOUD, {}).then((con) => {
+    //   console.log('Mongo connected! ');
+    //   console.log(con.connections);
+    // });
+    await mongoose.connect(DB_LOCAL, {}).then((con) => {
       console.log('Mongo connected! ');
       //console.log(con.connections);
     });

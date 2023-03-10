@@ -28,7 +28,7 @@ const ThreadForm = (props) => {
 
     let formData = new FormData();
     formData.append('myFile', event.target.files[0]);
-    const response = await fetch('/api/v1/upload', {
+    const response = await fetch('/api/v1/threads/upload', {
       method: 'POST',
       body: formData,
     });
@@ -39,6 +39,7 @@ const ThreadForm = (props) => {
 
     setIsLoading(false);
     setErrorMessage('');
+    console.log(response_data.driveID);
   };
 
   const tagChangeHandler = (event) => {
@@ -48,9 +49,38 @@ const ThreadForm = (props) => {
   const submitChangeHandler = (event) => {
     event.preventDefault();
 
-    if (isLoading) {
+    if (
+      isLoading ||
+      enteredTitle === '' ||
+      enteredVideo === '' ||
+      enteredTag === '' ||
+      enteredContent === '' ||
+      videoDriveLink === ''
+    ) {
+      if (isLoading) {
+        console.log('Video is loading, please wait');
+      } else {
+        console.log('Missing information');
+      }
       return;
     }
+
+    setEnteredTitle(enteredTitle.trim());
+    let slug = enteredTitle;
+
+    slug = slug.trim();
+
+    // chuyển về dạng tổ hợp
+    slug = slug.normalize('NFD');
+    // xóa các ký tự dấu tổ hợp
+    slug = slug.replace(/[\u0300-\u036f]/g, '');
+    // chuyển chữ đ/Đ thành d/D
+    slug = slug.replace(/[đĐ]/g, (m) => (m === 'đ' ? 'd' : 'D'));
+
+    slug = slug.toLowerCase();
+    slug = slug.replace('-', '_');
+
+    slug = slug.replace(' ', '-');
 
     const threadData = {
       title: enteredTitle,
@@ -59,6 +89,7 @@ const ThreadForm = (props) => {
       content: enteredContent,
       tag: enteredTag,
       createDate: Date.now(),
+      slug: slug,
     };
     let error = null;
     if (enteredContent === '' || enteredTitle === '' || enteredTag === '' || enteredVideo === '') {

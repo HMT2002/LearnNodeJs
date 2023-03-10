@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 import Card from './Card';
 import './ThreadCard.css';
@@ -8,12 +9,17 @@ function ThreadCard(props) {
   const [user, setUser] = useState(props.thread.user);
   const [content, setContent] = useState(props.thread.content);
 
+  const [slug, setSlug] = useState(props.thread.slug);
+
+  const navigateSlug = useNavigate();
+
   const titleClickedHandler = () => {
     //setTitle('Updated!');
     console.log(title);
   };
   const cardClickedHandler = () => {
     console.log('Card ' + title + ' Clicked');
+    navigateSlug('/threads/' + slug);
   };
   return (
     <Card onClick={cardClickedHandler}>

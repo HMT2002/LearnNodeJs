@@ -7,6 +7,7 @@ const threadSchema = new mongoose.Schema({
   createDate: { type: Date, required: false },
   tag: { type: String, required: [true, 'Post required'] },
   video: { type: String, required: [true, 'Post required'] },
+  slug: { type: String, required: [false, 'Post required'] },
 });
 const Thread = mongoose.model('Thread', threadSchema);
 

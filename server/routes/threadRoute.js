@@ -3,19 +3,19 @@ const threadController = require('../controllers/threadController');
 const router = express.Router();
 const upload = require('../modules/multerAPI.js');
 
-router.param('id', threadController.CheckID);
+router.param('slug', threadController.CheckSlug);
 
 //ROUTE HANDLER
 router
   .route('/')
   .get(threadController.GetAllThreads)
   .post(threadController.CheckInput, threadController.CreateNewThread);
+router.route('/upload').post(upload, threadController.UploadNewFile);
+
 router
-  .route('/:id/:n?')
+  .route('/:slug/:n?')
   .get(threadController.GetThread)
   .patch(threadController.UpdateThread)
   .delete(threadController.DeleteThread);
-
-router.route('/upload').post(upload, threadController.UploadNewFile);
 
 module.exports = router;
