@@ -1,10 +1,12 @@
 import './Card.css';
 
 function Card(props) {
-  const classes = 'card ' + props.className;
+  const classes = 'card-' + props.className;
 
   const divClickedHandler = () => {
-    props.onClick();
+    if (props.onClick) {
+      props.onClick();
+    }
   };
 
   return (

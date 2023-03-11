@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const DB_LOCAL = 'mongodb://127.0.0.1:27017/';
+const DB_LOCAL = 'mongodb://127.0.0.1:27017/LearnNodeJS';
 const DB_CLOUD = process.env.DATABASE.replace('<PASSWORD>', process.env.DATABASE_PASSWORD);
 
 const connect = async () => {

@@ -37,7 +37,7 @@ const Thread = () => {
   return (
     <div>
       <h3>ID: {slug}</h3>
-      <video src={thread.video} autoPlay controls loop></video>
+      <video src={thread.video} controls loop></video>
       <h3>Title: {thread.title}</h3>
       <h3>Content: {thread.content}</h3>
     </div>
