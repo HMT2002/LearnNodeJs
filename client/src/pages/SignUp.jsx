@@ -53,6 +53,11 @@ const SignUp = () => {
     const response_data = await response.json();
     console.log(response_data);
 
+    if (response_data.status === 'fail') {
+      setErrorMessage('Username, Email or Account has been used');
+      return;
+    }
+
     setEnteredAccount('');
     setEnteredPassword('');
     setEnteredPasswordConfirm('');
