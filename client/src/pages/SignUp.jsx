@@ -40,7 +40,6 @@ const SignUp = () => {
       password: enteredPassword,
       passwordConfirm: enteredPasswordConfirm,
       email: enteredEmail,
-      createDate: Date.now(),
     };
 
     const response = await fetch('/api/v1/users/signup', {
