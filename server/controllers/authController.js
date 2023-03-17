@@ -2,19 +2,30 @@ const jwt = require('jsonwebtoken');
 
 const User = require('./../models/mongo/User');
 const catchAsync = require('./../utils/catchAsync');
+const AppError = require('./../utils/appError');
 
-exports.SignUp = catchAsync(async (req, res, nex) => {
+const SignToken = (id) => {
+  return jwt.sign({ id: id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
+};
+
+exports.SignUp = catchAsync(async (req, res, next) => {
   console.log(req.body);
 
+  const { account, password, passwordConfirm, email, username } = req.body;
+
+  if (!account || !password || !passwordConfirm || !email || !username) {
+    next(new AppError('Please provide full information for sign up.', 400));
+  }
+
   const newUser = await User.create({
-    account: req.body.account,
-    password: req.body.password,
-    passwordConfirm: req.body.passwordConfirm,
-    email: req.body.email,
-    username: req.body.username,
+    account: account,
+    password: password,
+    passwordConfirm: passwordConfirm,
+    email: email,
+    username: username,
   });
 
-  const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
+  const token = SignToken(newUser._id);
   res.status(201).json({
     status: 'success create new user',
     token: token,
@@ -23,28 +34,24 @@ exports.SignUp = catchAsync(async (req, res, nex) => {
     },
   });
 });
-exports.SignIn = catchAsync(async (req, res, nex) => {
+exports.SignIn = catchAsync(async (req, res, next) => {
   console.log(req.body);
 
-  const user = await User.findOne({ account: req.body.account, password: req.body.password });
-
-  if (user === null) {
-    res.status(400).json({
-      status: 'failed',
-      message: 'Wrong information',
-    });
-  } else {
-    const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
-
-    res.status(201).json({
-      status: 'found user',
-      token: token,
-
-      data: {
-        user: user,
-      },
-    });
+  const { account, password } = req.body;
+  if (!account || !password) {
+    return next(new AppError('Please provide account and password.', 400));
   }
+  const user = await User.findOne({ account: account }).select('+password');
+
+  if (!user || !(await user.correctPassword(password, user.password))) {
+    return next(new AppError('Wrong information.', 401));
+  }
+
+  const token = SignToken(user._id);
+  res.status(200).json({
+    status: 'success sign in',
+    token: token,
+  });
 });
 exports.SignOut = catchAsync(async () => {
   console.log(req.body);
