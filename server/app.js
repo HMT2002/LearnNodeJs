@@ -2,19 +2,8 @@
 const express = require('express');
 const morgan = require('morgan');
 const app = express();
-
-app.all('*', (req, res, next) => {
-  // res.status(404).json({
-  //   status: 'falied',
-  //   message: 'Cant find ' + req.originalUrl + ' on the server',
-  // });
-
-  const err = new Error('Cant find ' + req.originalUrl + ' on the server');
-  err.status = 'fail';
-  err.statusCode = 404;
-
-  next(err);
-});
+const AppError = require('./utils/appError');
+const globalErrorHandler = require('./controllers/errorController');
 
 // const client_posts = JSON.parse(fs.readFileSync('./json-resources/client_posts.json'));
 
@@ -33,26 +22,22 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use((err, req, res, next) => {
-  err.statusCode = err.statusCode || 500;
-  err.status = err.status || 'error';
-
-  res.status(err.statusCode).json({
-    status: err.status,
-    message: err.message,
-  });
-});
-
 //ROUTES
+const defaultRoute = require('./routes/defaultRoute');
 const threadRouter = require('./routes/threadRoute');
 const userRouter = require('./routes/userRoute');
 const signRouter = require('./routes/signRoute');
 const testRoute = require('./routes/testRoute');
 
-app.use('/', threadRouter);
+app.use('/', defaultRoute);
 app.use('/api/v1/threads', threadRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/sign', signRouter);
 app.use('/api/test', testRoute);
+
+app.all('*', (req, res, next) => {
+  next(new AppError('Cant find ' + req.originalUrl + ' on the server', 404));
+});
+app.use(globalErrorHandler);
 
 module.exports = app;
