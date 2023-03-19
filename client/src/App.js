@@ -72,7 +72,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Welcome />}></Route>
             <Route path="/threads" element={<Welcome />}></Route>
-
+            <Route path="/user-info" element={<Welcome />}></Route>
             <Route path="/create-thread" element={<NewThread />}></Route>
             <Route path="/test" element={<TestPage />}></Route>
             <Route path="/sign/in" element={<SignIn />}></Route>
