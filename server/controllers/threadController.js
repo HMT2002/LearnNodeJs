@@ -6,18 +6,17 @@ const threads_test = JSON.parse(fs.readFileSync('./json-resources/threads_test.j
 const Thread = require('../models/mongo/Thread');
 const driveAPI = require('../modules/driveAPI');
 const helperAPI = require('../modules/helperAPI');
+const catchAsync = require('./../utils/catchAsync');
+const AppError = require('./../utils/appError');
 
-exports.CheckSlug = async (req, res, next, value) => {
-  console.log('ID value is: ' + value);
+exports.CheckSlug = catchAsync(async (req, res, next, value) => {
+  console.log('Slug value is: ' + value);
   const thread = await Thread.findOne({ slug: value });
   if (thread === undefined || !thread) {
-    return res.status(401).json({
-      status: 'failed',
-      message: 'invalid ID',
-    });
+    next(new AppError('No thread found with that slug', 404));
   }
   next();
-};
+});
 
 exports.CheckInput = (req, res, next, value) => {
   console.log('ID value is: ' + value);
@@ -36,7 +35,7 @@ exports.CheckInput = (req, res, next, value) => {
   next();
 };
 
-exports.GetAllThreads = async (req, res) => {
+exports.GetAllThreads = catchAsync(async (req, res) => {
   //console.log(threads_test);
 
   const threads = await Thread.find({});
@@ -49,7 +48,7 @@ exports.GetAllThreads = async (req, res) => {
       threads: threads,
     },
   });
-};
+});
 
 exports.UploadNewFile = async (req, res) => {
   //console.log(req);
@@ -90,22 +89,24 @@ exports.UploadNewFile = async (req, res) => {
   });
 };
 
-exports.GetThread = async (req, res) => {
-  console.log(req.params);
+exports.GetThread = catchAsync(async (req, res) => {
+  // console.log(req.params);
 
   const slug = req.params.slug;
 
   const thread = await Thread.findOne({ slug: slug });
-
+  if (thread === undefined || !thread) {
+    return next(new AppError('No thread found with that slug', 404));
+  }
   res.status(200).json({
     status: 'success',
     data: {
       thread: thread,
     },
   });
-};
+});
 
-exports.CreateNewThread = async (req, res) => {
+exports.CreateNewThread = catchAsync(async (req, res) => {
   console.log('api/v1/threads ');
   console.log(req.params);
   console.log(req.body);
@@ -123,7 +124,7 @@ exports.CreateNewThread = async (req, res) => {
     status: 'success create',
     data: response_data,
   });
-};
+});
 
 exports.UpdateThread = (req, res) => {
   console.log(req.params);

@@ -3,7 +3,7 @@ const threadController = require('../controllers/threadController');
 const router = express.Router();
 const upload = require('../modules/multerAPI.js');
 
-router.param('slug', threadController.CheckSlug);
+//router.param('slug', threadController.CheckSlug);
 
 //ROUTE HANDLER
 router
