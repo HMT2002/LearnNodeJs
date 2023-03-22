@@ -1,5 +1,6 @@
 const express = require('express');
 const threadController = require('../controllers/threadController');
+const authController = require('../controllers/authController');
 const router = express.Router();
 const upload = require('../modules/multerAPI.js');
 
@@ -8,7 +9,7 @@ const upload = require('../modules/multerAPI.js');
 //ROUTE HANDLER
 router
   .route('/')
-  .get(threadController.GetAllThreads)
+  .get(authController.protect, threadController.GetAllThreads)
   .post(threadController.CheckInput, threadController.CreateNewThread);
 router.route('/upload').post(upload, threadController.UploadNewFile);
 
