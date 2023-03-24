@@ -82,3 +82,22 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   next();
 });
+
+exports.Forget = catchAsync(async (req, res, next) => {
+  console.log(req.body);
+  const { account } = req.body;
+  if (!account) {
+    return next(new AppError('Please provide account to reset password', 400));
+  }
+  const user = await User.findOne({ account: account });
+
+  if (!user) {
+    return next(new AppError('Check input, no user', 401));
+  }
+
+  const token = SignToken(user._id);
+  res.status(200).json({
+    status: 'succeed ',
+    message: 'Recover mail sent!',
+  });
+});
