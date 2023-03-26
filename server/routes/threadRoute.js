@@ -14,6 +14,12 @@ router
 router.route('/upload').post(upload, threadController.UploadNewFile);
 
 router
+  .route('/:slug/comment')
+  .post(threadController.CreateNewComment)
+  .patch(threadController.UpdateThread)
+  .delete(threadController.DeleteThread);
+
+router
   .route('/:slug/:n?')
   .get(threadController.GetThread)
   .patch(threadController.UpdateThread)

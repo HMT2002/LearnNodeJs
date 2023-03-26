@@ -126,6 +126,16 @@ exports.CreateNewThread = catchAsync(async (req, res) => {
   });
 });
 
+exports.CreateNewComment = catchAsync(async (req, res) => {
+  console.log('api/v1/threads ');
+  console.log(req.body);
+  const { comment } = req.body;
+  res.status(201).json({
+    status: 'success comment!',
+    data: comment,
+  });
+});
+
 exports.UpdateThread = (req, res) => {
   console.log(req.params);
   const id = req.params.slug;
