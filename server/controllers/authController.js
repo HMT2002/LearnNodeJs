@@ -1,3 +1,4 @@
+const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
 
 const User = require('./../models/mongo/User');
@@ -23,6 +24,7 @@ exports.SignUp = catchAsync(async (req, res, next) => {
     passwordConfirm: passwordConfirm,
     email: email,
     username: username,
+    passwordChangedAt: Date.now(),
   });
 
   const token = SignToken(newUser._id);
@@ -69,17 +71,31 @@ exports.protect = catchAsync(async (req, res, next) => {
   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
     token = req.headers.authorization.split(' ')[1];
   }
-  console.log(token);
 
-  if (!token) {
-    next(new AppError('You are not login'));
+  if (token === undefined) {
+    return next(new AppError('You are not login', 401));
   }
   //2) Validate token
 
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+  console.log(decoded);
   //3) Check if user is existed
 
+  const currentUser = await User.findById(decoded.id);
+  //console.log(currentUser);
+
+  if (!currentUser) {
+    return next(new AppError('User no longer existed', 401));
+  }
   //4) Check if user change password after JWT was issued
 
+  if (currentUser.changePasswordAfter(decoded.iat)) {
+    return next(new AppError('User recently changed password. Please login again'));
+  }
+
+  // Access to protected route
+  req.user = currentUser;
   next();
 });
 
