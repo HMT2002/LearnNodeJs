@@ -106,23 +106,15 @@ exports.GetThread = catchAsync(async (req, res) => {
   });
 });
 
-exports.CreateNewThread = catchAsync(async (req, res) => {
+exports.CreateNewThread = catchAsync(async (req, res, next) => {
   console.log('api/v1/threads ');
   console.log(req.params);
   console.log(req.body);
-  const newThreadMongo = new Thread(req.body);
-  const response_data = await newThreadMongo
-    .save()
-    .then((doc) => {
-      console.log(doc);
-      return doc;
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  const newThread = await Thread.create(req.body);
+
   res.status(201).json({
     status: 'success create',
-    data: response_data,
+    data: newThread,
   });
 });
 

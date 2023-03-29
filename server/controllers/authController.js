@@ -72,9 +72,9 @@ exports.protect = catchAsync(async (req, res, next) => {
     token = req.headers.authorization.split(' ')[1];
   }
 
-  if (token === undefined) {
-    return next(new AppError('You are not login', 401));
-  }
+  // if (token === undefined) {
+  //   return next(new AppError('You are not login', 401));
+  // }
   //2) Validate token
 
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
