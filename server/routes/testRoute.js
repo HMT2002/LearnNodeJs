@@ -14,6 +14,7 @@ router.route('/').post(signController.CheckID, signController.CheckInput, signCo
 
 router.route('/upload').post(upload, testController.UploadNewFile);
 router.route('/threads').get(testController.GetAllThreads).post(testController.CreateNewThread);
+router.route('/ffmpeg').post(testController.FFmpeg);
 
 router.route('/:id').post(signController.CheckID, signController.CheckInput, signController.SignIn);
 router.route('/:id/out').post(signController.CheckID, signController.CheckInput, signController.SignOut);

@@ -91,6 +91,21 @@ exports.GetAllThreads = async (req, res) => {
   });
 };
 
+exports.FFmpeg = async (req, res) => {
+  //console.log(threads_test);
+
+  // const threads = await Thread.find({});
+  // console.log(threads);
+
+  res.status(200).json({
+    status: 'success',
+    requestTime: req.requestTime,
+    data: {
+      threads: 'FFmpeg data',
+    },
+  });
+};
+
 exports.CreateNewThread = async (req, res) => {
   console.log('api/test/threads ');
   console.log(req.body);
