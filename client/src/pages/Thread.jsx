@@ -27,6 +27,15 @@ const Thread = () => {
     } catch (error) {
       setError(error.message);
     }
+
+    try {
+      var vid = document.getElementById('main-video');
+      vid.volume = 0.2;
+      // console.log('volume set');
+    } catch {
+      // console.log('volume not set');
+    }
+
     setIsLoading(false);
   }, []);
 
@@ -37,7 +46,7 @@ const Thread = () => {
   return (
     <div>
       <h3>ID: {slug}</h3>
-      <video src={thread.video} controls loop></video>
+      <video id="main-video" src={thread.video} controls loop></video>
       <h3>Title: {thread.title}</h3>
       <h3>Content: {thread.content}</h3>
     </div>

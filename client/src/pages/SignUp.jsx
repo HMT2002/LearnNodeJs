@@ -3,10 +3,13 @@ import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 import './SignIn.css';
 
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import Card from '../components/Card';
 
 const SignUp = () => {
+  const navigate = useNavigate();
+
   const [enteredAccount, setEnteredAccount] = useState('');
   const [enteredPassword, setEnteredPassword] = useState('');
   const [enteredPasswordConfirm, setEnteredPasswordConfirm] = useState('');
@@ -62,6 +65,10 @@ const SignUp = () => {
     setEnteredPasswordConfirm('');
     setEnteredUsername('');
     setEnteredEmail('');
+
+    localStorage.setItem('token', 'Bearer ' + response_data.token);
+
+    navigate('/');
   };
 
   return (

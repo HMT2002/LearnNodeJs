@@ -47,15 +47,18 @@ const TestPage = () => {
     fetchThreadHandler();
   }, [fetchThreadHandler]);
 
-  const addArrayHandler = useCallback(() => {
-    let newArr = testArray;
-    newArr[testArray.length] = makeid(5);
+  const addArrayHandler = () => {
+    // let newArr = testArray;
+    // newArr[testArray.length] = makeid(5);
     setTestArray((prevState) => {
-      console.log(prevState);
       return [...prevState, makeid(5)];
     });
-    //console.log(testArray);
-  });
+    console.log('addArrayHandler: ' + testArray.length + ' -' + testArray);
+  };
+
+  useEffect(() => {
+    console.log('useEffect: ' + testArray.length + ' -' + testArray);
+  }, [testArray]);
 
   return (
     <section>

@@ -10,12 +10,19 @@ const Welcome = () => {
   const [error, setError] = useState(null);
   const [threads, setThreads] = useState([]);
 
+  const storedToken = localStorage.getItem('token');
   const fetchThreadsHandler = useCallback(async () => {
     setError(null);
     setIsLoading(true);
     try {
-      const response = await fetch('/api/v1/threads');
-      if (!response.ok) {
+      const response = await fetch('/api/v1/threads', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: storedToken,
+        },
+      });
+      if (!response.status) {
         throw new Error('Something went wrong!');
       }
       const data = await response.json();

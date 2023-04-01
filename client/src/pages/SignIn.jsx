@@ -2,8 +2,11 @@ import './SignIn.css';
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function SignIn() {
+  const navigate = useNavigate();
+
   const [enteredAccount, setEnteredAccount] = useState('');
   const [enteredPassword, setEnteredPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -33,7 +36,7 @@ function SignIn() {
     const response_data = await response.json();
     console.log(response_data);
 
-    if (response_data.status === 'failed') {
+    if (response_data.status === 'fail') {
       setErrorMessage(response_data.message);
       return;
     }
@@ -41,6 +44,10 @@ function SignIn() {
     setEnteredAccount('');
     setEnteredPassword('');
     setErrorMessage('Signed in!');
+
+    localStorage.setItem('token', 'Bearer ' + response_data.token);
+
+    navigate('/');
   };
   return (
     <div className="p-3 my-5 d-flex flex-column w-50">
