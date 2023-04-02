@@ -2,6 +2,10 @@ import './Thread.css';
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
+
+import ContentBox from '../components/ContentBox';
+import CommentBox from '../components/CommentBox';
+
 const Thread = () => {
   const { slug } = useParams();
   const [isLoading, setIsLoading] = useState(false);
@@ -45,10 +49,14 @@ const Thread = () => {
 
   return (
     <div>
-      <h3>ID: {slug}</h3>
-      <video id="main-video" src={thread.video} controls loop></video>
-      <h3>Title: {thread.title}</h3>
-      <h3>Content: {thread.content}</h3>
+      <div>
+        <h3>ID: {slug}</h3>
+        <video id="main-video" src={thread.video} controls loop></video>
+        <h3>Title: {thread.title}</h3>
+        <ContentBox content={thread.content}></ContentBox>
+      </div>
+
+      <CommentBox></CommentBox>
     </div>
   );
 };
