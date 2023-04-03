@@ -12,7 +12,8 @@ const Thread = () => {
   const [userStatus, setUserStatus] = useState('Guest');
 
   const [error, setError] = useState(null);
-  const [thread, setThread] = useState([]);
+  const [thread, setThread] = useState({});
+  const [comments, setComments] = useState([]);
 
   const fetchThreadHandler = useCallback(async () => {
     setError(null);
@@ -23,11 +24,11 @@ const Thread = () => {
         throw new Error('Something went wrong!');
       }
       const data = await response.json();
-      console.log(data);
+      //console.log(data);
       setThread((prevThreads) => {
         return data.data.thread;
       });
-      console.log(thread);
+      //console.log(thread);
     } catch (error) {
       setError(error.message);
     }
@@ -56,7 +57,7 @@ const Thread = () => {
         <ContentBox content={thread.content}></ContentBox>
       </div>
 
-      <CommentBox></CommentBox>
+      <CommentBox thread={thread}></CommentBox>
     </div>
   );
 };

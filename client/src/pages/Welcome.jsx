@@ -18,7 +18,7 @@ const Welcome = () => {
       const response = await fetch('/api/v1/threads', {
         method: 'GET',
         headers: {
-          'Content-Type': 'application/json',
+          // 'Content-Type': 'application/json',
           Authorization: storedToken,
         },
       });
