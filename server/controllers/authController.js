@@ -99,6 +99,26 @@ exports.protect = catchAsync(async (req, res, next) => {
   next();
 });
 
+exports.Check = catchAsync(async (req, res, next) => {
+  const user = req.user;
+  res.status(200).json({
+    status: 'ok',
+    message: 'user token is fine',
+    role: req.user.role,
+  });
+});
+
+exports.restrictTo = (...roles) => {
+  return (req, res, next) => {
+    //roles ['admin','content-creator']. role='guest'
+
+    if (!roles.includes(req.user.role)) {
+      return next(new AppError('You do not have permission to perform this action', 403));
+    }
+    next();
+  };
+};
+
 exports.Forget = catchAsync(async (req, res, next) => {
   console.log(req.body);
   const { account } = req.body;

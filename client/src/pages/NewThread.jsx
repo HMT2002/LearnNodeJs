@@ -15,11 +15,14 @@ const NewThread = (props) => {
       if (error != null) {
         throw new Error(error);
       }
+      const storedToken = localStorage.getItem('token');
+
       const response = await fetch('/api/v1/threads', {
         method: 'POST',
         body: JSON.stringify(thread),
         headers: {
           'Content-Type': 'application/json',
+          Authorization: storedToken,
         },
       });
       const response_data = await response.json();
@@ -40,7 +43,6 @@ const NewThread = (props) => {
   //   };
   //   props.onAddThread(threadData, error);
   // };
-
   return (
     <section>
       <div className="new-thread">

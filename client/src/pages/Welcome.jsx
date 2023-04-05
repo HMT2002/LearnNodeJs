@@ -43,7 +43,7 @@ const Welcome = () => {
   return (
     <section>
       <section>
-        <ControllPanel userStatus={userStatus} />
+        <ControllPanel />
       </section>
       <section>
         {!isLoading && !error && <ListThreadCard threads={threads} />}

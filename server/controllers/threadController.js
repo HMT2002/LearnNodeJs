@@ -4,17 +4,39 @@ const path = require('path');
 const threads = JSON.parse(fs.readFileSync('./json-resources/threads.json'));
 const threads_test = JSON.parse(fs.readFileSync('./json-resources/threads_test.json'));
 const Thread = require('../models/mongo/Thread');
+const User = require('../models/mongo/User');
+const Comment = require('../models/mongo/Comment');
+
 const driveAPI = require('../modules/driveAPI');
 const helperAPI = require('../modules/helperAPI');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
 
-exports.CheckSlug = catchAsync(async (req, res, next, value) => {
-  console.log('Slug value is: ' + value);
-  const thread = await Thread.findOne({ slug: value });
+exports.CheckSlug = catchAsync(async (req, res, next) => {
+  console.log('Slug value is: ' + req.params.slug);
+
+  // let slug = req.params.slug;
+
+  // slug = slug.trim();
+
+  // // chuyển về dạng tổ hợp
+  // slug = slug.normalize('NFD');
+  // // xóa các ký tự dấu tổ hợp
+  // slug = slug.replace(/[\u0300-\u036f]/g, '');
+  // // chuyển chữ đ/Đ thành d/D
+  // slug = slug.replace(/[đĐ]/g, (m) => (m === 'đ' ? 'd' : 'D'));
+
+  // slug = slug.toLowerCase();
+  // slug = slug.replace('-', '_');
+
+  // slug = slug.replace(' ', '-');
+
+  const thread = await Thread.findOne({ slug: req.params.slug });
   if (thread === undefined || !thread) {
-    next(new AppError('No thread found with that slug', 404));
+    return next(new AppError('No thread found with that slug', 404));
   }
+  req.thread = thread;
+
   next();
 });
 
@@ -27,10 +49,7 @@ exports.CheckInput = (req, res, next, value) => {
   }
 
   if (isInvalid) {
-    return res.status(400).json({
-      status: 'failed',
-      message: 'bad request',
-    });
+    return next(new AppError('Missing thread information'), 406);
   }
   next();
 };
@@ -92,11 +111,9 @@ exports.UploadNewFile = async (req, res) => {
 exports.GetThread = catchAsync(async (req, res) => {
   // console.log(req.params);
 
-  const slug = req.params.slug;
-
-  const thread = await Thread.findOne({ slug: slug });
+  const thread = req.thread;
   if (thread === undefined || !thread) {
-    return next(new AppError('No thread found with that slug', 404));
+    return next(new AppError('No thread found!', 404));
   }
   res.status(200).json({
     status: 'success',
@@ -107,10 +124,12 @@ exports.GetThread = catchAsync(async (req, res) => {
 });
 
 exports.CreateNewThread = catchAsync(async (req, res, next) => {
-  console.log('api/v1/threads ');
-  console.log(req.params);
+  console.log('api/v1/threads');
+  //console.log(req.params);
   console.log(req.body);
-  const newThread = await Thread.create(req.body);
+
+  const user = req.user;
+  const newThread = await Thread.create({ ...req.body, user: user });
 
   res.status(201).json({
     status: 'success create',
@@ -119,9 +138,18 @@ exports.CreateNewThread = catchAsync(async (req, res, next) => {
 });
 
 exports.CreateNewComment = catchAsync(async (req, res) => {
-  console.log('api/v1/threads ');
+  console.log('api/v1/threads/' + req.params.slug + '/comment');
   console.log(req.body);
-  const { comment } = req.body;
+
+  const slug = req.params.slug;
+  const thread = await Thread.findOne({ slug: slug });
+  const user = req.user;
+  const comment = { ...req.body, thread: thread, user: user };
+  //console.log(comment);
+
+  const newComment = await Comment.create(comment);
+  //console.log(newComment);
+
   res.status(201).json({
     status: 'success comment!',
     data: comment,

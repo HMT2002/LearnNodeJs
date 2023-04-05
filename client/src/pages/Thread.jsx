@@ -32,7 +32,6 @@ const Thread = () => {
     } catch (error) {
       setError(error.message);
     }
-
     try {
       var vid = document.getElementById('main-video');
       vid.volume = 0.2;
@@ -40,7 +39,6 @@ const Thread = () => {
     } catch {
       // console.log('volume not set');
     }
-
     setIsLoading(false);
   }, []);
 

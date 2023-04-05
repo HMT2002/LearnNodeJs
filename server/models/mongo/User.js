@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema({
   living_city: { type: String, default: '', required: false },
   cert_date: { type: String, default: '', required: false },
 
-  role: { type: String, default: 'norm_user' },
+  role: { type: String, enum: ['guest', 'user', 'content-creator', 'admin'], default: 'guest' },
   photo: {
     link: { type: String, default: 'https://i.imgur.com/KNJnIR0.jpg' },
   },

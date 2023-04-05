@@ -28,11 +28,15 @@ app.use((req, res, next) => {
 const defaultRoute = require('./routes/defaultRoute');
 const threadRouter = require('./routes/threadRoute');
 const userRouter = require('./routes/userRoute');
+const authRouter = require('./routes/authRoute');
+
 const testRoute = require('./routes/testRoute');
 
 app.use('/', defaultRoute);
 app.use('/api/v1/threads', threadRouter);
 app.use('/api/v1/users', userRouter);
+app.use('/api/v1/auth', authRouter);
+
 app.use('/api/test', testRoute);
 
 app.all('*', (req, res, next) => {

@@ -9,20 +9,39 @@ const upload = require('../modules/multerAPI.js');
 //ROUTE HANDLER
 router
   .route('/')
-  .get(authController.protect, threadController.GetAllThreads)
-  .post(threadController.CheckInput, threadController.CreateNewThread);
+  .get(threadController.GetAllThreads)
+  .post(
+    authController.protect,
+    authController.restrictTo('admin', 'content-creator'),
+    threadController.CheckInput,
+    threadController.CreateNewThread
+  );
+
 router.route('/upload').post(upload, threadController.UploadNewFile);
 
 router
   .route('/:slug/comment')
-  .post(threadController.CreateNewComment)
-  .patch(threadController.UpdateThread)
-  .delete(threadController.DeleteThread);
+  .post(
+    authController.protect,
+    authController.restrictTo('admin', 'content-creator', 'user'),
+    threadController.CheckSlug,
+    threadController.CreateNewComment
+  );
 
 router
   .route('/:slug/:n?')
-  .get(threadController.GetThread)
-  .patch(threadController.UpdateThread)
-  .delete(threadController.DeleteThread);
+  .get(threadController.CheckSlug, threadController.GetThread)
+  .patch(
+    authController.protect,
+    authController.restrictTo('admin', 'content-creator'),
+    threadController.CheckSlug,
+    threadController.UpdateThread
+  )
+  .delete(
+    authController.protect,
+    authController.restrictTo('admin', 'content-creator'),
+    threadController.CheckSlug,
+    threadController.DeleteThread
+  );
 
 module.exports = router;

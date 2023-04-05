@@ -1,13 +1,13 @@
 const mongoose = require('mongoose');
 
 const threadSchema = new mongoose.Schema({
-  title: { type: String, required: [true, 'Post required'] },
-  content: { type: String, required: [true, 'Post required'] },
-  user: { type: String, default: 'Test User' },
+  title: { type: String, required: [true, 'Thread required'] },
+  content: { type: String, required: [true, 'Thread required'] },
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null, required: [true, 'Thread required'] },
   createDate: { type: Date, required: false },
-  tag: { type: String, required: [true, 'Post required'] },
-  video: { type: String, required: [true, 'Post required'] },
-  slug: { type: String, required: [false, 'Post required'] },
+  tag: { type: String, required: [true, 'Thread required'] },
+  video: { type: String, required: [true, 'Thread required'] },
+  slug: { type: String, required: [false, 'Thread required'] },
 });
 const Thread = mongoose.model('Thread', threadSchema);
 
