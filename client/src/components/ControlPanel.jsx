@@ -90,6 +90,9 @@ function ControllPanel() {
   //     break;
   // }
   const storedToken = localStorage.getItem('token');
+
+  console.log('localstorage: ControlPanel');
+  console.log(localStorage.getItem('token'));
   const fetchAuth = useCallback(async () => {
     try {
       const response = await fetch('/api/v1/auth/check-token', {
@@ -104,8 +107,9 @@ function ControllPanel() {
       }
       const data = await response.json();
       console.log(data);
+      let tempAuthority;
+
       if (data.status === 'ok') {
-        let tempAuthority;
         switch (data.role) {
           case 'user':
             tempAuthority = (
@@ -125,7 +129,7 @@ function ControllPanel() {
                     <a href="/find-threads/contributed">Threads with your posts</a>
                   </li>
                   <li>
-                    <a href="/sign/out">Sign out</a>
+                    <a href="/">Sign out</a>{' '}
                   </li>
                 </ul>
               </div>
@@ -157,7 +161,7 @@ function ControllPanel() {
                     <a href="/create-thread/">Create new thread</a>
                   </li>
                   <li>
-                    <a href="/sign/out">Sign out</a>
+                    <a href="/">Sign out</a>{' '}
                   </li>
                 </ul>
               </div>
@@ -180,6 +184,9 @@ function ControllPanel() {
                   </li>
                   <li>
                     <a href="/admin">You are the admin</a>
+                  </li>
+                  <li>
+                    <a href="/">Sign out</a>
                   </li>
                 </ul>
               </div>
@@ -206,12 +213,29 @@ function ControllPanel() {
                 </ul>
               </div>
             );
-
             break;
         }
-
-        setUserAuthority(tempAuthority);
+      } else {
+        tempAuthority = (
+          <div className="p-sectionLinks">
+            <ul className="p-sectionLinks-list">
+              <li>
+                <a href="/whats-new/posts/">New thead</a>
+              </li>
+              <li>
+                <a href="/find-threads/started">Find threads</a>
+              </li>
+              <li>
+                <a href="/sign/in">Sign in</a>
+              </li>
+              <li>
+                <a href="/sign/up">Sign up</a>
+              </li>
+            </ul>
+          </div>
+        );
       }
+      setUserAuthority(tempAuthority);
     } catch (error) {}
   }, []);
 
@@ -220,11 +244,11 @@ function ControllPanel() {
   }, [fetchAuth]);
 
   return (
-    <div className="p-navEl is-selected" data-has-children="true">
+    <React.Fragment>
       <div className="menu menu--structural" data-menu="menu" aria-hidden="true">
         <div className="menu-content">{userAuthority}</div>
       </div>
-    </div>
+    </React.Fragment>
   );
 }
 

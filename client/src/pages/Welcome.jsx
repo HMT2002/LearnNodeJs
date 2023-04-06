@@ -10,8 +10,11 @@ const Welcome = () => {
   const [error, setError] = useState(null);
   const [threads, setThreads] = useState([]);
 
-  const storedToken = localStorage.getItem('token');
+  console.log('localstorage: Welcome');
+  console.log(localStorage.getItem('token'));
   const fetchThreadsHandler = useCallback(async () => {
+    const storedToken = localStorage.getItem('token');
+
     setError(null);
     setIsLoading(true);
     try {

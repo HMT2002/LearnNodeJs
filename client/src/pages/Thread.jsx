@@ -47,7 +47,7 @@ const Thread = () => {
   }, [fetchThreadHandler]);
 
   return (
-    <div>
+    <React.Fragment>
       <div>
         <h3>ID: {slug}</h3>
         <video id="main-video" src={thread.video} controls loop></video>
@@ -56,7 +56,7 @@ const Thread = () => {
       </div>
 
       <CommentBox thread={thread}></CommentBox>
-    </div>
+    </React.Fragment>
   );
 };
 export default Thread;

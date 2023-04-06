@@ -12,9 +12,9 @@ const SignToken = (id) => {
 exports.SignUp = catchAsync(async (req, res, next) => {
   console.log(req.body);
 
-  const { account, password, passwordConfirm, email, username } = req.body;
+  const { account, password, passwordConfirm, email, username, role } = req.body;
 
-  if (!account || !password || !passwordConfirm || !email || !username) {
+  if (!account || !password || !passwordConfirm || !email || !username || !role) {
     next(new AppError('Please provide full information for sign up.', 400));
   }
 
@@ -25,6 +25,7 @@ exports.SignUp = catchAsync(async (req, res, next) => {
     email: email,
     username: username,
     passwordChangedAt: Date.now(),
+    role: role,
   });
 
   const token = SignToken(newUser._id);
@@ -67,6 +68,8 @@ exports.SignOut = catchAsync(async () => {
 exports.protect = catchAsync(async (req, res, next) => {
   //1) Getting token and check if it's there
 
+  console.log('protect');
+  console.log(req.headers.authorization);
   let token;
   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
     token = req.headers.authorization.split(' ')[1];

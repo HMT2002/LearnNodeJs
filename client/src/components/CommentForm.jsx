@@ -26,23 +26,24 @@ const CommentForm = (props) => {
       thread: props.thread,
     };
 
-    const storedToken = localStorage.getItem('token');
-    console.log(props.thread);
-    if (!props.thread) {
-      throw new Error('No thread found: ' + props.thread.slug);
-    }
+    // const storedToken = localStorage.getItem('token');
+    // console.log(props.thread);
+    // if (!props.thread) {
+    //   throw new Error('No thread found: ' + props.thread.slug);
+    // }
 
-    const response = await fetch('/api/v1/threads/' + props.thread.slug + '/comment', {
-      method: 'POST',
-      body: JSON.stringify(commentData),
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: storedToken,
-      },
-    });
-    const response_data = await response.json();
-    console.log(response_data);
-    //props.onSaveCommentData(commentData, error);
+    // const response = await fetch('/api/v1/threads/' + props.thread.slug + '/comment', {
+    //   method: 'POST',
+    //   body: JSON.stringify(commentData),
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //     Authorization: storedToken,
+    //   },
+    // });
+    // const response_data = await response.json();
+    // console.log(response_data);
+
+    props.onSaveCommentData(commentData, error);
 
     setEnteredComment('');
   };

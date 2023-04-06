@@ -43,6 +43,7 @@ const SignUp = () => {
       password: enteredPassword,
       passwordConfirm: enteredPasswordConfirm,
       email: enteredEmail,
+      role: 'user',
     };
 
     const response = await fetch('/api/v1/users/signup', {
@@ -76,30 +77,30 @@ const SignUp = () => {
       <h1>Sign Up</h1>
       <div className="text-black m-5">
         <form onSubmit={submitChangeHandler}>
-          <div className="d-flex flex-row align-items-center mb-4 ">
+          <div className="enter-field ">
             <label>Account</label>
             <input type="text" onChange={accountChangeHandler} />
           </div>
 
-          <div className="d-flex flex-row align-items-center mb-4">
+          <div className="enter-field">
             <label>Password</label>
 
             <input type="password" onChange={passwordChangeHandler} />
           </div>
 
-          <div className="d-flex flex-row align-items-center mb-4">
+          <div className="enter-field">
             <label>Re-enter password</label>
 
             <input type="password" onChange={passwordConfirmChangeHandler} />
           </div>
 
-          <div className="d-flex flex-row align-items-center mb-4">
+          <div className="enter-field">
             <label>Email</label>
 
             <input type="text" onChange={emailChangeHandler} />
           </div>
 
-          <div className="d-flex flex-row align-items-center mb-4">
+          <div className="enter-field">
             <label>Choose Username</label>
 
             <input type="text" onChange={usernameChangeHandler} />

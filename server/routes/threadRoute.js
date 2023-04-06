@@ -21,6 +21,7 @@ router.route('/upload').post(upload, threadController.UploadNewFile);
 
 router
   .route('/:slug/comment')
+  .get(threadController.CheckSlug, threadController.GetAllComments)
   .post(
     authController.protect,
     authController.restrictTo('admin', 'content-creator', 'user'),

@@ -1,7 +1,7 @@
 import './SignIn.css';
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 
-import React, { useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function SignIn() {
@@ -46,11 +46,17 @@ function SignIn() {
     setErrorMessage('Signed in!');
 
     localStorage.setItem('token', 'Bearer ' + response_data.token);
+    // localStorage.setItem(
+    //   'token',
+    //   'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MmVhOTFiNjAxODI2ZjEwZDk5N2EzMyIsImlhdCI6MTY4MDc5MDIyNywiZXhwIjoxNjg4NTY2MjI3fQ.WL1V8TcwSx5ArZzNVzAt5gSueGflyoVxzh6ebvFU6eQ'
+    // );
 
+    console.log('localstorage: SignIn');
+    console.log(localStorage.getItem('token'));
     navigate('/');
   };
   return (
-    <div className="p-3 my-5 d-flex flex-column w-50">
+    <React.Fragment>
       <form onSubmit={submitChangeHandler}>
         <input type="text" onChange={accountChangeHandler} />
         <input type="password" onChange={passwordChangeHandler} />
@@ -90,7 +96,7 @@ function SignIn() {
           </div>
         </div>
       </form>
-    </div>
+    </React.Fragment>
   );
 }
 

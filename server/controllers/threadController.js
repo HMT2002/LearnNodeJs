@@ -139,7 +139,7 @@ exports.CreateNewThread = catchAsync(async (req, res, next) => {
 
 exports.CreateNewComment = catchAsync(async (req, res) => {
   console.log('api/v1/threads/' + req.params.slug + '/comment');
-  console.log(req.body);
+  //console.log(req.body);
 
   const slug = req.params.slug;
   const thread = await Thread.findOne({ slug: slug });
@@ -153,6 +153,23 @@ exports.CreateNewComment = catchAsync(async (req, res) => {
   res.status(201).json({
     status: 'success comment!',
     data: comment,
+  });
+});
+
+exports.GetAllComments = catchAsync(async (req, res) => {
+  console.log('api/v1/threads/' + req.params.slug + '/comment');
+  //console.log(req.body);
+
+  const slug = req.params.slug;
+  const thread = await Thread.findOne({ slug: slug });
+  //console.log(comment);
+
+  const comments = await Comment.find({ thread: thread }).populate('user');
+  //console.log(newComment);
+
+  res.status(201).json({
+    status: 'ok',
+    data: comments,
   });
 });
 
