@@ -2,6 +2,7 @@ import './Welcome.css';
 import ControllPanel from '../components/ControlPanel';
 import ListThreadCard from '../components/ListThreadCard';
 import React, { useState, useEffect, useCallback } from 'react';
+import { getAllThread } from '../actions/threadActions';
 
 const Welcome = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -18,18 +19,8 @@ const Welcome = () => {
     setError(null);
     setIsLoading(true);
     try {
-      const response = await fetch('/api/v1/threads', {
-        method: 'GET',
-        headers: {
-          // 'Content-Type': 'application/json',
-          Authorization: storedToken,
-        },
-      });
-      if (!response.status) {
-        throw new Error('Something went wrong!');
-      }
-      const data = await response.json();
-      console.log(data);
+      const data = await getAllThread();
+      // console.log(data);
       setThreads((prevThreads) => {
         return [...data.data.threads];
       });

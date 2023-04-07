@@ -31,7 +31,7 @@ exports.CheckSlug = catchAsync(async (req, res, next) => {
 
   // slug = slug.replace(' ', '-');
 
-  const thread = await Thread.findOne({ slug: req.params.slug });
+  const thread = await Thread.findOne({ slug: req.params.slug }).populate('user');
   if (thread === undefined || !thread) {
     return next(new AppError('No thread found with that slug', 404));
   }
@@ -57,7 +57,7 @@ exports.CheckInput = (req, res, next, value) => {
 exports.GetAllThreads = catchAsync(async (req, res) => {
   //console.log(threads_test);
 
-  const threads = await Thread.find({});
+  const threads = await Thread.find({}).populate('user');
   //console.log(threads);
   res.status(200).json({
     status: 'success',
@@ -129,7 +129,7 @@ exports.CreateNewThread = catchAsync(async (req, res, next) => {
   console.log(req.body);
 
   const user = req.user;
-  const newThread = await Thread.create({ ...req.body, user: user });
+  const newThread = await Thread.create({ ...req.body, user: user }).populate('user');
 
   res.status(201).json({
     status: 'success create',

@@ -93,6 +93,11 @@ function ControllPanel() {
 
   console.log('localstorage: ControlPanel');
   console.log(localStorage.getItem('token'));
+
+  const logOutHandler = useCallback(() => {
+    localStorage.removeItem('token');
+  }, []);
+
   const fetchAuth = useCallback(async () => {
     try {
       const response = await fetch('/api/v1/auth/check-token', {
@@ -129,7 +134,9 @@ function ControllPanel() {
                     <a href="/find-threads/contributed">Threads with your posts</a>
                   </li>
                   <li>
-                    <a href="/">Sign out</a>{' '}
+                    <a href="/" onClick={logOutHandler}>
+                      Sign out
+                    </a>
                   </li>
                 </ul>
               </div>
@@ -161,7 +168,9 @@ function ControllPanel() {
                     <a href="/create-thread/">Create new thread</a>
                   </li>
                   <li>
-                    <a href="/">Sign out</a>{' '}
+                    <a href="/" onClick={logOutHandler}>
+                      Sign out
+                    </a>
                   </li>
                 </ul>
               </div>
@@ -186,7 +195,9 @@ function ControllPanel() {
                     <a href="/admin">You are the admin</a>
                   </li>
                   <li>
-                    <a href="/">Sign out</a>
+                    <a href="/" onClick={logOutHandler}>
+                      Sign out
+                    </a>
                   </li>
                 </ul>
               </div>

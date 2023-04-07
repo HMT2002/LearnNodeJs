@@ -8,6 +8,7 @@ import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
 import Thread from './pages/Thread';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import ProtectedRoute from './components/Route/ProtectRoute';
 
 function App() {
   // const [threads, setThreads] = useState([]);

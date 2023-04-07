@@ -6,6 +6,8 @@ import { useParams } from 'react-router-dom';
 import ContentBox from '../components/ContentBox';
 import CommentBox from '../components/CommentBox';
 
+import { getThread } from '../actions/threadActions';
+
 const Thread = () => {
   const { slug } = useParams();
   const [isLoading, setIsLoading] = useState(false);
@@ -19,11 +21,7 @@ const Thread = () => {
     setError(null);
     setIsLoading(true);
     try {
-      const response = await fetch('/api/v1/threads/' + slug);
-      if (!response.ok) {
-        throw new Error('Something went wrong!');
-      }
-      const data = await response.json();
+      const data = await getThread(slug);
       //console.log(data);
       setThread((prevThreads) => {
         return data.data.thread;

@@ -25,7 +25,7 @@ function ThreadCard(props) {
     <Card onClick={cardClickedHandler}>
       <figure>
         <p>{title}</p>
-        <p>{user}</p>
+        <p>{user.username}</p>
         <p>{content}</p>
       </figure>
     </Card>
