@@ -1,11 +1,19 @@
 import React, { Fragment } from 'react';
-import { Redirect, Route } from 'react-router-dom';
+import { redirect, Route } from 'react-router-dom';
 
-const ProtectedRoute = ({ isAdmin, component: Component, ...rest }) => {
+const ProtectedRoute = ({ isAdmin, isAuthenticated, component: Component }) => {
   return (
-    <Fragment>
-      <Route />
-    </Fragment>
+    <Route
+      element={(props) => {
+        if (isAuthenticated === false) {
+          return <redirect to="/login" />;
+        }
+        if (isAdmin === false) {
+          return <redirect to="/login" />;
+        }
+        return <Component {...props} />;
+      }}
+    />
   );
 };
 

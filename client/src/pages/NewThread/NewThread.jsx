@@ -1,7 +1,9 @@
 import './NewThread.css';
 
-import ThreadForm from '../components/ThreadForm';
+import ThreadForm from '../../components/ThreadForm';
 import React, { useState, useEffect, useCallback } from 'react';
+
+import { POSTThreadAction } from '../../actions/threadActions';
 
 const NewThread = (props) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -15,20 +17,10 @@ const NewThread = (props) => {
       if (error != null) {
         throw new Error(error);
       }
-      const storedToken = localStorage.getItem('token');
 
-      const response = await fetch('/api/v1/threads', {
-        method: 'POST',
-        body: JSON.stringify(thread),
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: storedToken,
-        },
-      });
-      const response_data = await response.json();
-      console.log(response_data);
+      const data = await POSTThreadAction(thread);
       // setThreads((prevThreads) => {
-      //   return [response_data.data, ...prevThreads];
+      //   return [data.data, ...prevThreads];
       // });
     } catch (err) {
       console.log(err.message);

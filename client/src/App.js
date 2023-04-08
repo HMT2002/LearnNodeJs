@@ -1,12 +1,12 @@
 import './App.css';
 import React, { useState, useEffect, useCallback } from 'react';
 
-import NewThread from './pages/NewThread';
-import Welcome from './pages/Welcome';
-import TestPage from './pages/TestPage';
-import SignIn from './pages/SignIn';
-import SignUp from './pages/SignUp';
-import Thread from './pages/Thread';
+import NewThread from './pages/NewThread/NewThread';
+import Welcome from './pages/Welcome/Welcome';
+import TestPage from './pages/TestPage/TestPage';
+import SignIn from './pages/SignIn/SignIn';
+import SignUp from './pages/SignUp/SignUp';
+import Thread from './pages/Thread/Thread';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import ProtectedRoute from './components/Route/ProtectRoute';
 

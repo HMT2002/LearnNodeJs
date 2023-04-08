@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { POSTVideoUploadAction } from '../actions/threadActions';
 
 import './ThreadForm.css';
 const ThreadForm = (props) => {
@@ -28,18 +29,13 @@ const ThreadForm = (props) => {
 
     let formData = new FormData();
     formData.append('myFile', event.target.files[0]);
-    const response = await fetch('/api/v1/threads/upload', {
-      method: 'POST',
-      body: formData,
-    });
 
-    const response_data = await response.json();
-    console.log(response_data);
-    setVideoDriveLink('https://drive.google.com/uc?export=view&id=' + response_data.driveID);
+    const data = await POSTVideoUploadAction(formData);
+    setVideoDriveLink('https://drive.google.com/uc?export=view&id=' + data.driveID);
+    // console.log(data.driveID);
 
     setIsLoading(false);
     setErrorMessage('');
-    console.log(response_data.driveID);
   };
 
   const tagChangeHandler = (event) => {

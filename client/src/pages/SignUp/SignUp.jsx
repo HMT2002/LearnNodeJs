@@ -1,11 +1,12 @@
 import './SignUp.css';
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
-import './SignIn.css';
 
-import React, { useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import Card from '../components/Card';
+import Card from '../../components/Card';
+
+import { SignUpAction } from '../../actions/userActions';
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -37,45 +38,40 @@ const SignUp = () => {
   const submitChangeHandler = async (event) => {
     event.preventDefault();
 
-    const userData = {
-      account: enteredAccount,
-      username: enteredUsername,
-      password: enteredPassword,
-      passwordConfirm: enteredPasswordConfirm,
-      email: enteredEmail,
-      role: 'user',
-    };
+    try {
+      const userData = {
+        account: enteredAccount,
+        username: enteredUsername,
+        password: enteredPassword,
+        passwordConfirm: enteredPasswordConfirm,
+        email: enteredEmail,
+        role: 'user',
+      };
 
-    const response = await fetch('/api/v1/users/signup', {
-      method: 'POST',
-      body: JSON.stringify(userData),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    const response_data = await response.json();
-    console.log(response_data);
+      const data = await SignUpAction(userData);
+      if (data.status === 'fail') {
+        setErrorMessage('Username, Email or Account has been used');
+        return;
+      }
 
-    if (response_data.status === 'fail') {
-      setErrorMessage('Username, Email or Account has been used');
-      return;
+      setEnteredAccount('');
+      setEnteredPassword('');
+      setEnteredPasswordConfirm('');
+      setEnteredUsername('');
+      setEnteredEmail('');
+
+      localStorage.setItem('token', 'Bearer ' + data.token);
+
+      navigate('/');
+    } catch (error) {
+      setErrorMessage(error);
     }
-
-    setEnteredAccount('');
-    setEnteredPassword('');
-    setEnteredPasswordConfirm('');
-    setEnteredUsername('');
-    setEnteredEmail('');
-
-    localStorage.setItem('token', 'Bearer ' + response_data.token);
-
-    navigate('/');
   };
 
   return (
-    <div>
+    <Fragment>
       <h1>Sign Up</h1>
-      <div className="text-black m-5">
+      <div>
         <form onSubmit={submitChangeHandler}>
           <div className="enter-field ">
             <label>Account</label>
@@ -109,7 +105,7 @@ const SignUp = () => {
           <button type="submit">Register</button>
         </form>
       </div>
-    </div>
+    </Fragment>
   );
 };
 

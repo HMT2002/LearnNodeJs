@@ -3,10 +3,10 @@ import './Thread.css';
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 
-import ContentBox from '../components/ContentBox';
-import CommentBox from '../components/CommentBox';
+import ContentBox from '../../components/ContentBox';
+import CommentBox from '../../components/CommentBox';
 
-import { getThread } from '../actions/threadActions';
+import { GETThreadAction } from '../../actions/threadActions';
 
 const Thread = () => {
   const { slug } = useParams();
@@ -21,7 +21,7 @@ const Thread = () => {
     setError(null);
     setIsLoading(true);
     try {
-      const data = await getThread(slug);
+      const data = await GETThreadAction(slug);
       //console.log(data);
       setThread((prevThreads) => {
         return data.data.thread;

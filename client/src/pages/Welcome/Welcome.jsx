@@ -1,8 +1,8 @@
 import './Welcome.css';
-import ControllPanel from '../components/ControlPanel';
-import ListThreadCard from '../components/ListThreadCard';
+import ControllPanel from '../../components/ControlPanel';
+import ListThreadCard from '../../components/ListThreadCard';
 import React, { useState, useEffect, useCallback } from 'react';
-import { getAllThread } from '../actions/threadActions';
+import { GETAllThreadAction } from '../../actions/threadActions';
 
 const Welcome = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -19,7 +19,7 @@ const Welcome = () => {
     setError(null);
     setIsLoading(true);
     try {
-      const data = await getAllThread();
+      const data = await GETAllThreadAction();
       // console.log(data);
       setThreads((prevThreads) => {
         return [...data.data.threads];

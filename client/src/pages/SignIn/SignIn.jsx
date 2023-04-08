@@ -4,6 +4,7 @@ import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 import React, { useCallback, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { SignInAction } from '../../actions/userActions';
 function SignIn() {
   const navigate = useNavigate();
 
@@ -26,18 +27,10 @@ function SignIn() {
       password: enteredPassword,
     };
 
-    const response = await fetch('/api/v1/users/signin', {
-      method: 'POST',
-      body: JSON.stringify(userData),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    const response_data = await response.json();
-    console.log(response_data);
+    const response = await SignInAction(userData);
 
-    if (response_data.status === 'fail') {
-      setErrorMessage(response_data.message);
+    if (response.status === 'fail') {
+      setErrorMessage(response.message);
       return;
     }
 
@@ -45,7 +38,7 @@ function SignIn() {
     setEnteredPassword('');
     setErrorMessage('Signed in!');
 
-    localStorage.setItem('token', 'Bearer ' + response_data.token);
+    localStorage.setItem('token', 'Bearer ' + response.token);
     // localStorage.setItem(
     //   'token',
     //   'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MmVhOTFiNjAxODI2ZjEwZDk5N2EzMyIsImlhdCI6MTY4MDc5MDIyNywiZXhwIjoxNjg4NTY2MjI3fQ.WL1V8TcwSx5ArZzNVzAt5gSueGflyoVxzh6ebvFU6eQ'
