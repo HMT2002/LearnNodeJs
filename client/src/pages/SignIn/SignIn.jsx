@@ -1,30 +1,52 @@
 import './SignIn.css';
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useCallback, useState, useEffect, useReducer } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { SignInAction } from '../../actions/userActions';
-function SignIn() {
+
+const userReducer = (state, action) => {
+  if (action.type === 'USER_INPUT_ACCOUNT') {
+    return { value: action.val, isValid: true };
+  }
+  if (action.type === 'USER_INPUT_PASSWORD') {
+    return { value: action.val, isValid: true };
+  }
+  if (action.type === 'USER_INPUT_PASSWORD_CONFIRM') {
+    return { value: action.val, isValid: true };
+  }
+  if (action.type === 'USER_INPUT_USERNAME') {
+    return { value: action.val, isValid: true };
+  }
+  if (action.type === 'USER_INPUT_EMAIL') {
+    return { value: action.val, isValid: true };
+  }
+  return { value: '', isValid: false };
+};
+
+const SignIn = () => {
   const navigate = useNavigate();
 
-  const [enteredAccount, setEnteredAccount] = useState('');
-  const [enteredPassword, setEnteredPassword] = useState('');
+  const [accountState, dispatchAccount] = useReducer(userReducer, { value: '', isValid: false });
+  const [passwordState, dispatchPassword] = useReducer(userReducer, { value: '', isValid: false });
+
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
   const accountChangeHandler = (event) => {
-    setEnteredAccount(event.target.value);
+    dispatchAccount({ type: 'USER_INPUT_ACCOUNT', val: event.target.value });
   };
   const passwordChangeHandler = (event) => {
-    setEnteredPassword(event.target.value);
+    dispatchPassword({ type: 'USER_INPUT_PASSWORD', val: event.target.value });
   };
   const submitChangeHandler = async (event) => {
     event.preventDefault();
 
+    setIsLoading(true);
     const userData = {
-      account: enteredAccount,
-      password: enteredPassword,
+      account: accountState.value,
+      password: passwordState.value,
     };
 
     const response = await SignInAction(userData);
@@ -34,8 +56,8 @@ function SignIn() {
       return;
     }
 
-    setEnteredAccount('');
-    setEnteredPassword('');
+    dispatchAccount({ type: 'USER_INPUT_ACCOUNT', val: '' });
+    dispatchPassword({ type: 'USER_INPUT_PASSWORD', val: '' });
     setErrorMessage('Signed in!');
 
     localStorage.setItem('token', 'Bearer ' + response.token);
@@ -46,6 +68,7 @@ function SignIn() {
 
     console.log('localstorage: SignIn');
     console.log(localStorage.getItem('token'));
+    setIsLoading(false);
     navigate('/');
   };
   return (
@@ -91,6 +114,6 @@ function SignIn() {
       </form>
     </React.Fragment>
   );
-}
+};
 
 export default SignIn;

@@ -23,19 +23,18 @@ const Thread = () => {
     try {
       const data = await GETThreadAction(slug);
       //console.log(data);
-      setThread((prevThreads) => {
-        return data.data.thread;
-      });
+      setThread(data.data.thread);
       //console.log(thread);
     } catch (error) {
       setError(error.message);
     }
+
     try {
       var vid = document.getElementById('main-video');
       vid.volume = 0.2;
       // console.log('volume set');
     } catch {
-      // console.log('volume not set');
+      console.log('volume not set');
     }
     setIsLoading(false);
   }, []);

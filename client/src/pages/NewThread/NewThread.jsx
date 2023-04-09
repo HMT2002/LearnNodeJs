@@ -2,11 +2,22 @@ import './NewThread.css';
 
 import ThreadForm from '../../components/ThreadForm';
 import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { POSTThreadAction } from '../../actions/threadActions';
 
 const NewThread = (props) => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    console.log(localStorage.getItem('token'));
+    if (!localStorage.getItem('token')) {
+      navigate('/sign/in');
+    }
+  }, []);
+
   const [isLoading, setIsLoading] = useState(false);
+
   const [error, setError] = useState(null);
 
   const saveThreadDataHandler = useCallback(async (thread, error) => {

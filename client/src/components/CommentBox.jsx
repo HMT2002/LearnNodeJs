@@ -2,24 +2,21 @@ import './CommentBox.css';
 
 import React, { useState, useEffect, useCallback } from 'react';
 
-import CommentBlock from './CommentBlock';
 import CommentForm from './CommentForm';
+import ListCommentBlock from './ListCommentBlock';
+
+import { CheckTokenAction } from '../actions/userActions';
+import { GETAllCommentAction, POSTCommentAction } from '../actions/commentActions';
 const CommentBox = (props) => {
-  const [listComment, setListComment] = useState([]);
-  const [thread, setThread] = useState(props.thread);
-  const [threadComments, setThreadComments] = useState(<p>There is no comment</p>);
+  const [comments, setComments] = useState(<p>There is no comment</p>);
 
   const [isLoading, setIsLoading] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userStatus, setUserStatus] = useState('Guest');
   const [error, setError] = useState(null);
-  const storedToken = localStorage.getItem('token');
   //console.log(props.thread);
 
   //console.log('this is liscomment' + listComment + ' : ' + listComment.length);
-
-  console.log('localstorage: CommentBox');
-  console.log(localStorage.getItem('token'));
 
   const loadingUserStatusHandler = useCallback(async () => {
     //setUserStatus(props.user);
@@ -27,22 +24,14 @@ const CommentBox = (props) => {
 
     //
     try {
-      const checkToken_response = await fetch('/api/v1/auth/check-token', {
-        method: 'GET',
-        headers: {
-          // 'Content-Type': 'application/json',
-          Authorization: storedToken,
-        },
-      });
-      if (!checkToken_response.status) {
-        throw new Error('Something went wrong!');
-      }
-      const dataCheck = await checkToken_response.json();
-      //console.log(data);
-      if (dataCheck.status === 'ok') {
-        setUserStatus('Logged in as ' + dataCheck.role);
+      const storedToken = localStorage.getItem('token');
+
+      const data = await CheckTokenAction(storedToken);
+
+      if (data.status === 'ok') {
+        setUserStatus('Logged in as ' + data.role);
         setIsLoggedIn(true);
-        console.log(dataCheck);
+        console.log(data);
       }
     } catch {
       setError(error.message);
@@ -52,21 +41,11 @@ const CommentBox = (props) => {
   }, []);
 
   const getCommentsHandler = async () => {
-    const comments_response = await fetch('/api/v1/threads/' + props.thread.slug + '/comment', {
-      method: 'GET',
-      headers: {
-        // 'Content-Type': 'application/json',
-        // Authorization: storedToken,
-      },
-    });
-    if (!comments_response.status) {
-      throw new Error('Something went wrong!');
-    }
-    const dataComment = await comments_response.json();
-    // console.log(dataComment);
-    if (dataComment.status === 'ok') {
-      if (dataComment.data.length > 0) {
-        setThreadComments(dataComment.data.map((comment, index) => <CommentBlock key={index} comment={comment} />));
+    const data = await GETAllCommentAction(props.thread.slug);
+    console.log(data);
+    if (data.status === 'ok') {
+      if (data.data.length > 0) {
+        setComments(<ListCommentBlock comments={data.data}></ListCommentBlock>);
       }
     }
   };
@@ -74,9 +53,6 @@ const CommentBox = (props) => {
   const loadingCommentsHandler = useCallback(async () => {
     setIsLoading(true);
     try {
-      console.log('this is the props: ');
-      console.log(thread);
-      console.log(props.thread);
       await getCommentsHandler();
     } catch {
       setError(error.message);
@@ -95,21 +71,12 @@ const CommentBox = (props) => {
 
   const postCommentHandler = async (comment) => {
     const storedToken = localStorage.getItem('token');
-    console.log(props.thread);
     if (!props.thread) {
       throw new Error('No thread found: ' + comment.thread.slug);
     }
 
-    const response = await fetch('/api/v1/threads/' + comment.thread.slug + '/comment', {
-      method: 'POST',
-      body: JSON.stringify(comment),
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: storedToken,
-      },
-    });
-    const response_data = await response.json();
-    // console.log(response_data);
+    const data = await POSTCommentAction(comment, storedToken);
+    console.log(data);
   };
   const saveCommentDataHandler = async (comment, error) => {
     try {
@@ -128,7 +95,7 @@ const CommentBox = (props) => {
   return (
     <React.Fragment>
       <div>
-        {!isLoading && !error && threadComments}
+        {!isLoading && !error && comments}
         {isLoading && <p>Loading...</p>}
         {!isLoading && error && <p>{error}</p>}
       </div>
