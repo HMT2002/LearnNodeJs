@@ -1,28 +1,35 @@
 import './SignUp.css';
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 
-import React, { Fragment, useState, useReducer } from 'react';
+import React, { Fragment, useState, useReducer, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import Card from '../../components/Card';
+import defaultProfilePhoto from '../../resources/defaultProfilePhoto.jpg';
 
-import { SignUpAction } from '../../actions/userActions';
+import { SignUpAction, SignUpActionFormDataVersion } from '../../actions/userActions';
 
 const userReducer = (state, action) => {
   if (action.type === 'USER_INPUT_ACCOUNT') {
-    return { value: action.val, isValid: true };
+    return { value: action.val, isValid: action.val.trim().length > 5 };
   }
   if (action.type === 'USER_INPUT_PASSWORD') {
-    return { value: action.val, isValid: true };
+    return {
+      value: action.val,
+      isValid: action.val.trim().length > 5,
+    };
   }
   if (action.type === 'USER_INPUT_PASSWORD_CONFIRM') {
-    return { value: action.val, isValid: true };
+    return {
+      value: action.val,
+      isValid: action.val.trim().length > 5,
+    };
   }
   if (action.type === 'USER_INPUT_USERNAME') {
-    return { value: action.val, isValid: true };
+    return { value: action.val, isValid: action.val.trim().length > 5 };
   }
   if (action.type === 'USER_INPUT_EMAIL') {
-    return { value: action.val, isValid: true };
+    return { value: action.val, isValid: action.val.trim().length > 5 && action.val.includes('@') };
   }
   return { value: '', isValid: false };
 };
@@ -31,12 +38,13 @@ const SignUp = () => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-
   const [accountState, dispatchAccount] = useReducer(userReducer, { value: '', isValid: false });
   const [passwordState, dispatchPassword] = useReducer(userReducer, { value: '', isValid: false });
   const [passwordConfirmState, dispatchPasswordConfirm] = useReducer(userReducer, { value: '', isValid: false });
-  const [emailState, dispatchEmail] = useReducer(userReducer, { value: '', isValid: false });
   const [usernameState, dispatchUsername] = useReducer(userReducer, { value: '', isValid: false });
+  const [emailState, dispatchEmail] = useReducer(userReducer, { value: '', isValid: false });
+  const [isFormValid, setIsFormValid] = useState(false);
+  const [photoState, setPhoto] = useState(defaultProfilePhoto);
 
   const accountChangeHandler = (event) => {
     dispatchAccount({ type: 'USER_INPUT_ACCOUNT', val: event.target.value });
@@ -45,7 +53,10 @@ const SignUp = () => {
     dispatchPassword({ type: 'USER_INPUT_PASSWORD', val: event.target.value });
   };
   const passwordConfirmChangeHandler = (event) => {
-    dispatchPasswordConfirm({ type: 'USER_INPUT_PASSWORD_CONFIRM', val: event.target.value });
+    dispatchPasswordConfirm({
+      type: 'USER_INPUT_PASSWORD_CONFIRM',
+      val: event.target.value,
+    });
   };
 
   const emailChangeHandler = (event) => {
@@ -54,21 +65,64 @@ const SignUp = () => {
   const usernameChangeHandler = (event) => {
     dispatchUsername({ type: 'USER_INPUT_USERNAME', val: event.target.value });
   };
+
+  const { isValid: accountIsValid } = accountState;
+  const { isValid: emailIsValid } = emailState;
+  const { isValid: passwordIsValid } = passwordState;
+  const { isValid: passwordConfirmIsValid } = passwordConfirmState;
+  const { isValid: usernameIsValid } = usernameState;
+
+  useEffect(() => {
+    const identifier = setTimeout(() => {
+      console.log('Checking form validity!');
+      setIsFormValid(
+        accountIsValid &&
+          emailIsValid &&
+          passwordIsValid &&
+          passwordConfirmIsValid &&
+          usernameIsValid &&
+          passwordState.value.trim() === passwordConfirmState.value.trim()
+      );
+      console.log(isFormValid);
+    }, 500);
+
+    return () => {
+      console.log('CLEANUP');
+      clearTimeout(identifier);
+    };
+  }, [accountIsValid, emailIsValid, passwordIsValid, passwordConfirmIsValid, usernameIsValid]);
   const submitChangeHandler = async (event) => {
     setIsLoading(true);
+    if (!isFormValid) {
+      setErrorMessage('Please check all the information format!');
+      return;
+    }
     event.preventDefault();
 
     try {
-      const userData = {
-        account: accountState.value,
-        username: usernameState.value,
-        password: passwordState.value,
-        passwordConfirm: passwordConfirmState.value,
-        email: emailState.value,
-        role: 'user',
-      };
+      // const userData = {
+      //   account: accountState.value.trim(),
+      //   username: usernameState.value.trim(),
+      //   password: passwordState.value.trim(),
+      //   passwordConfirm: passwordConfirmState.value.trim(),
+      //   email: emailState.value.trim(),
+      //   role: 'user',
+      //   myFile: photoState,
+      // };
 
-      const data = await SignUpAction(userData);
+      // const data = await SignUpAction(userData);
+
+      const userFormData = new FormData();
+      userFormData.set('account', accountState.value.trim());
+      userFormData.set('username', usernameState.value.trim());
+      userFormData.set('password', passwordState.value.trim());
+      userFormData.set('passwordConfirm', passwordConfirmState.value.trim());
+      userFormData.set('email', emailState.value.trim());
+      userFormData.set('role', 'user');
+      userFormData.append('myFile', photoState);
+
+      const data = await SignUpActionFormDataVersion(userFormData);
+
       if (data.status === 'fail') {
         setErrorMessage('Username, Email or Account has been used');
         return;
@@ -88,7 +142,24 @@ const SignUp = () => {
       setErrorMessage(error);
     }
   };
+  const registerDataChange = (event) => {
+    if (event.target.name === 'avatar') {
+      // const reader = new FileReader();
 
+      // reader.onload = () => {
+      //   if (reader.readyState === 2) {
+      //     setPhoto(reader.result);
+      //     console.log(photoState);
+      //   }
+      // };
+
+      // reader.readAsDataURL(e.target.files[0]);
+
+      setPhoto(event.target.files[0]);
+    } else {
+      setPhoto(event.target.value);
+    }
+  };
   return (
     <Fragment>
       <h1>Sign Up</h1>
@@ -122,11 +193,19 @@ const SignUp = () => {
 
             <input type="text" onChange={usernameChangeHandler} />
           </div>
+          <div id="choose-image">
+            <img className="choose-image-preview" src={photoState} />
 
-          <button type="submit">Register</button>
+            <input type="file" name="avatar" accept="image/*" onChange={registerDataChange} />
+          </div>
+          <button type="submit" disabled={!isFormValid}>
+            Register
+          </button>
         </form>
       </div>
       <div>{errorMessage}</div>
+      {!isFormValid && <div>form is not valid</div>}
+      {isFormValid && <div>form is valid</div>}
     </Fragment>
   );
 };

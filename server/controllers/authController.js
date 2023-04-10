@@ -1,9 +1,13 @@
 const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
+const fs = require('fs');
 
 const User = require('./../models/mongo/User');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
+const driveAPI = require('../modules/driveAPI');
+const imgurAPI = require('../modules/imgurAPI');
+const cloudinary = require('../modules/cloudinaryAPI');
 
 const SignToken = (id) => {
   return jwt.sign({ id: id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
@@ -14,7 +18,14 @@ exports.SignUp = catchAsync(async (req, res, next) => {
 
   const { account, password, passwordConfirm, email, username, role } = req.body;
 
-  if (!account || !password || !passwordConfirm || !email || !username || !role) {
+  const photo = await imgurAPI({ image: fs.createReadStream(req.file.path), type: 'stream' });
+  //console.log(photo);
+
+  // const cloudinaryData = await cloudinary(req.body.photo);
+
+  // console.log(cloudinaryData);
+
+  if (!account || !password || !passwordConfirm || !email || !username) {
     next(new AppError('Please provide full information for sign up.', 400));
   }
 
@@ -26,9 +37,15 @@ exports.SignUp = catchAsync(async (req, res, next) => {
     username: username,
     passwordChangedAt: Date.now(),
     role: role,
+    photo: { link: photo.link },
   });
 
   const token = SignToken(newUser._id);
+
+  fs.unlinkSync(req.file.path, function (err) {
+    if (err) throw err;
+    console.log(req.file.path + ' deleted!');
+  });
   res.status(201).json({
     status: 'success create new user',
     token: token,

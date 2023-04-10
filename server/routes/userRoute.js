@@ -1,12 +1,13 @@
 const express = require('express');
 const userController = require('../controllers/userController');
 const authController = require('../controllers/authController');
+const upload = require('../modules/multerAPI.js');
 
 const router = express.Router();
 
 router.param('id', userController.CheckID);
 
-router.post('/signup', authController.SignUp);
+router.post('/signup', upload, authController.SignUp);
 router.post('/signin', authController.SignIn);
 router.post('/signout', authController.SignOut);
 

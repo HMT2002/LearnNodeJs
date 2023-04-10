@@ -23,6 +23,16 @@ export const SignUpAction = async (userData) => {
   return data;
 };
 
+export const SignUpActionFormDataVersion = async (userFormData) => {
+  const response = await fetch('/api/v1/users/signup', {
+    method: 'POST',
+    body: userFormData,
+  });
+  const data = await response.json();
+  // console.log(data);
+  return data;
+};
+
 export const CheckTokenAction = async (token) => {
   const response = await fetch('/api/v1/auth/check-token', {
     method: 'GET',

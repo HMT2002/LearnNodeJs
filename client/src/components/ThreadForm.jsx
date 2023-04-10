@@ -29,7 +29,6 @@ const ThreadForm = (props) => {
 
     let formData = new FormData();
     formData.append('myFile', event.target.files[0]);
-
     const data = await POSTVideoUploadAction(formData);
     setVideoDriveLink('https://drive.google.com/uc?export=view&id=' + data.driveID);
     // console.log(data.driveID);
