@@ -1,4 +1,7 @@
 export const SignInAction = async (userData) => {
+  if (!userData) {
+    return { status: 'fail' };
+  }
   const response = await fetch('/api/v1/users/signin', {
     method: 'POST',
     body: JSON.stringify(userData),
@@ -11,6 +14,9 @@ export const SignInAction = async (userData) => {
   return data;
 };
 export const SignUpAction = async (userData) => {
+  if (!userData) {
+    return { status: 'fail' };
+  }
   const response = await fetch('/api/v1/users/signup', {
     method: 'POST',
     body: JSON.stringify(userData),
@@ -24,6 +30,9 @@ export const SignUpAction = async (userData) => {
 };
 
 export const SignUpActionFormDataVersion = async (userFormData) => {
+  if (!userFormData) {
+    return { status: 'fail' };
+  }
   const response = await fetch('/api/v1/users/signup', {
     method: 'POST',
     body: userFormData,
@@ -34,6 +43,9 @@ export const SignUpActionFormDataVersion = async (userFormData) => {
 };
 
 export const CheckTokenAction = async (token) => {
+  if (!token) {
+    return { status: 'fail' };
+  }
   const response = await fetch('/api/v1/auth/check-token', {
     method: 'GET',
     headers: {

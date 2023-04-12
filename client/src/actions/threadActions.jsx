@@ -1,4 +1,7 @@
 export const GETThreadAction = async (slug) => {
+  if (!slug) {
+    return { status: 'fail' };
+  }
   const storedToken = localStorage.getItem('token');
   const response = await fetch('/api/v1/threads/' + slug, {
     method: 'GET',
@@ -32,6 +35,12 @@ export const GETAllThreadAction = async () => {
   return data;
 };
 export const POSTThreadAction = async (thread) => {
+  if (!thread) {
+    return { status: 'fail' };
+  }
+  if (!thread) {
+    return { status: 'fail' };
+  }
   const storedToken = localStorage.getItem('token');
 
   const response = await fetch('/api/v1/threads', {
@@ -48,7 +57,10 @@ export const POSTThreadAction = async (thread) => {
 };
 
 export const POSTVideoUploadAction = async (formData) => {
-  const response = await fetch('/api/v1/threads/upload', {
+  if (!formData) {
+    return { status: 'fail' };
+  }
+  const response = await fetch('/api/v1/threads/upload-video', {
     method: 'POST',
     body: formData,
   });

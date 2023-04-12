@@ -18,7 +18,6 @@ exports.SignUp = catchAsync(async (req, res, next) => {
 
   const { account, password, passwordConfirm, email, username, role } = req.body;
 
-  const photo = await imgurAPI({ image: fs.createReadStream(req.file.path), type: 'stream' });
   //console.log(photo);
 
   // const cloudinaryData = await cloudinary(req.body.photo);
@@ -29,6 +28,7 @@ exports.SignUp = catchAsync(async (req, res, next) => {
     next(new AppError('Please provide full information for sign up.', 400));
   }
 
+  const photo = await imgurAPI({ image: fs.createReadStream(req.file.path), type: 'stream' });
   const newUser = await User.create({
     account: account,
     password: password,
@@ -124,6 +124,7 @@ exports.Check = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: 'ok',
     message: 'user token is fine',
+    user: req.user,
     role: req.user.role,
   });
 });

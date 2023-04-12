@@ -15,16 +15,13 @@ const Thread = () => {
 
   const [error, setError] = useState(null);
   const [thread, setThread] = useState({});
-  const [comments, setComments] = useState([]);
 
   const fetchThreadHandler = useCallback(async () => {
     setError(null);
     setIsLoading(true);
     try {
       const data = await GETThreadAction(slug);
-      //console.log(data);
-      setThread(data.data.thread);
-      //console.log(thread);
+      setThread((prev) => data.data.thread);
     } catch (error) {
       setError(error.message);
     }

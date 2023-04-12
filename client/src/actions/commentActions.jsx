@@ -1,5 +1,8 @@
 const commentAction = () => {};
 export const GETAllCommentAction = async (slug) => {
+  if (!slug) {
+    return { status: 'fail' };
+  }
   const response = await fetch('/api/v1/threads/' + slug + '/comment', {
     method: 'GET',
     headers: {
@@ -14,6 +17,9 @@ export const GETAllCommentAction = async (slug) => {
 };
 
 export const POSTCommentAction = async (comment, token) => {
+  if (!comment) {
+    return { status: 'fail' };
+  }
   const response = await fetch('/api/v1/threads/' + comment.thread.slug + '/comment', {
     method: 'POST',
     body: JSON.stringify(comment),

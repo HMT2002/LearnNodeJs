@@ -14,10 +14,7 @@ const CommentBox = (props) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userStatus, setUserStatus] = useState('Guest');
   const [error, setError] = useState(null);
-  //console.log(props.thread);
-
-  //console.log('this is liscomment' + listComment + ' : ' + listComment.length);
-
+  // console.log(props.thread);
   const loadingUserStatusHandler = useCallback(async () => {
     //setUserStatus(props.user);
     setIsLoading(true);

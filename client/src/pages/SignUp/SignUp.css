@@ -63,4 +63,6 @@ label {
   border-color: yellow;
   border-width: 5px;
   padding: 15px;
+  max-width: 150px;
+  max-height: 150px;
 }

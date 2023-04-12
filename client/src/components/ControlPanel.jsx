@@ -1,98 +1,12 @@
 import './ControlPanel.css';
 import React, { useState, useEffect, useCallback } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { CheckTokenAction } from '../actions/userActions';
 
-function ControllPanel() {
-  const [userStatus, setUserStatus] = useState('');
+function ControllPanel(props) {
+  const [userImage, setUserImage] = useState('');
 
-  //let userAuthority;
   const [userAuthority, setUserAuthority] = useState('');
-
-  // switch (userStatus) {
-  //   case 'Normie':
-  //     userAuthority = (
-  //       <div className="p-sectionLinks">
-  //         <ul className="p-sectionLinks-list">
-  //           <li>
-  //             <a href="/whats-new/thread/">New thead</a>
-  //           </li>
-  //           <li>
-  //             <a href="/find-threads/started">Find threads</a>
-  //           </li>
-  //           <li>
-  //             <a href="/find-threads/started">Your starred threads</a>
-  //           </li>
-
-  //           <li>
-  //             <a href="/find-threads/contributed">Threads with your posts</a>
-  //           </li>
-  //           <li>
-  //             <a href="/sign/out">Sign out</a>
-  //           </li>
-  //         </ul>
-  //       </div>
-  //     );
-  //     break;
-  //   case 'ContentCreator':
-  //     userAuthority = (
-  //       <div className="p-sectionLinks">
-  //         <ul className="p-sectionLinks-list">
-  //           <li>
-  //             <a href="/whats-new/posts/">New thead</a>
-  //           </li>
-  //           <li>
-  //             <a href="/find-threads/started">Find threads</a>
-  //           </li>
-  //           <li>
-  //             <a href="/find-threads/started">Your threads</a>
-  //           </li>
-  //           <li>
-  //             <a href="/find-threads/started">Your starred threads</a>
-  //           </li>
-  //           <li>
-  //             <a href="/find-threads/contributed">Threads with your posts</a>
-  //           </li>
-  //           <li>
-  //             <a href="/find-threads/unanswered">Unanswered threads</a>
-  //           </li>
-  //           <li>
-  //             <a href="/create-thread/">Create new thread</a>
-  //           </li>
-  //           <li>
-  //             <a href="/sign/out">Sign out</a>
-  //           </li>
-  //         </ul>
-  //       </div>
-  //     );
-
-  //     break;
-  //   case 'Guest':
-  //   default:
-  //     userAuthority = (
-  //       <div className="p-sectionLinks">
-  //         <ul className="p-sectionLinks-list">
-  //           <li>
-  //             <a href="/whats-new/posts/">New thead</a>
-  //           </li>
-  //           <li>
-  //             <a href="/find-threads/started">Find threads</a>
-  //           </li>
-  //           <li>
-  //             <a href="/sign/in">Sign in</a>
-  //           </li>
-  //           <li>
-  //             <a href="/sign/up">Sign up</a>
-  //           </li>
-  //         </ul>
-  //       </div>
-  //     );
-
-  //     break;
-  // }
-  const storedToken = localStorage.getItem('token');
-
-  console.log('localstorage: ControlPanel');
-  console.log(localStorage.getItem('token'));
 
   const logOutHandler = useCallback(() => {
     localStorage.removeItem('token');
@@ -100,22 +14,27 @@ function ControllPanel() {
 
   const fetchAuth = useCallback(async () => {
     try {
-      const response = await fetch('/api/v1/auth/check-token', {
-        method: 'GET',
-        headers: {
-          // 'Content-Type': 'application/json',
-          Authorization: storedToken,
-        },
-      });
-      if (!response.status) {
-        throw new Error('Something went wrong!');
-      }
-      const data = await response.json();
-      console.log(data);
-      let tempAuthority;
+      let tempAuthority = (
+        <div className="p-sectionLinks">
+          <ul className="p-sectionLinks-list">
+            <li>
+              <a href="/whats-new/posts/">New thead</a>
+            </li>
+            <li>
+              <a href="/find-threads/started">Find threads</a>
+            </li>
+            <li>
+              <a href="/sign/in">Sign in</a>
+            </li>
+            <li>
+              <a href="/sign/up">Sign up</a>
+            </li>
+          </ul>
+        </div>
+      );
 
-      if (data.status === 'ok') {
-        switch (data.role) {
+      if (props.currentUser) {
+        switch (props.currentUser.role) {
           case 'user':
             tempAuthority = (
               <div className="p-sectionLinks">
@@ -142,6 +61,7 @@ function ControllPanel() {
               </div>
             );
             break;
+
           case 'content-creator':
             tempAuthority = (
               <div className="p-sectionLinks">
@@ -175,7 +95,6 @@ function ControllPanel() {
                 </ul>
               </div>
             );
-
             break;
 
           case 'admin':
@@ -206,57 +125,25 @@ function ControllPanel() {
             break;
           case 'guest':
           default:
-            tempAuthority = (
-              <div className="p-sectionLinks">
-                <ul className="p-sectionLinks-list">
-                  <li>
-                    <a href="/whats-new/posts/">New thead</a>
-                  </li>
-                  <li>
-                    <a href="/find-threads/started">Find threads</a>
-                  </li>
-                  <li>
-                    <a href="/sign/in">Sign in</a>
-                  </li>
-                  <li>
-                    <a href="/sign/up">Sign up</a>
-                  </li>
-                </ul>
-              </div>
-            );
             break;
         }
-      } else {
-        tempAuthority = (
-          <div className="p-sectionLinks">
-            <ul className="p-sectionLinks-list">
-              <li>
-                <a href="/whats-new/posts/">New thead</a>
-              </li>
-              <li>
-                <a href="/find-threads/started">Find threads</a>
-              </li>
-              <li>
-                <a href="/sign/in">Sign in</a>
-              </li>
-              <li>
-                <a href="/sign/up">Sign up</a>
-              </li>
-            </ul>
-          </div>
-        );
+        setUserImage(<img className="user-image" src={props.currentUser.photo.link} />);
       }
+
       setUserAuthority(tempAuthority);
-    } catch (error) {}
+    } catch (error) {
+      // console.log(error);
+    }
   }, []);
 
   useEffect(() => {
     fetchAuth();
-  }, [fetchAuth]);
+  }, [fetchAuth, props.currentUser]);
 
   return (
     <React.Fragment>
       <div className="menu menu--structural" data-menu="menu" aria-hidden="true">
+        <div className="user-info">{userImage}</div>
         <div className="menu-content">{userAuthority}</div>
       </div>
     </React.Fragment>

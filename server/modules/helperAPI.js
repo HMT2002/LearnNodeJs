@@ -10,4 +10,8 @@ const GenerrateRandomString = (length) => {
   return result;
 };
 
-module.exports = { GenerrateRandomString };
+const GenerrateRandomNumberBetween = (min, max) => {
+  return Math.floor(Math.random() * (Math.floor(max) - min) + Math.ceil(min)); // The maximum is exclusive and the
+};
+
+module.exports = { GenerrateRandomString, GenerrateRandomNumberBetween };

@@ -18,10 +18,12 @@
   },
   "homepage": "https://github.com/HMT2002/LearnNodeJs#readme",
   "dependencies": {
+    "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "bcryptjs": "^2.4.3",
     "cloudinary": "^1.35.0",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "fluent-ffmpeg": "^2.1.2",
     "formidable": "^2.1.1",
     "googleapis": "^110.0.0",
     "imgur": "^2.2.0",

@@ -17,7 +17,7 @@ router
     threadController.CreateNewThread
   );
 
-router.route('/upload').post(upload, threadController.UploadNewFile);
+router.route('/upload-video').post(upload, threadController.GetVideoThumbnail, threadController.UploadNewFile);
 
 router
   .route('/:slug/comment')

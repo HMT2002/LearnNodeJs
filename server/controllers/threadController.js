@@ -9,8 +9,20 @@ const Comment = require('../models/mongo/Comment');
 
 const driveAPI = require('../modules/driveAPI');
 const helperAPI = require('../modules/helperAPI');
+const imgurAPI = require('../modules/imgurAPI');
+
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
+
+const fluentFfmpeg = require('fluent-ffmpeg');
+const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
+fluentFfmpeg.setFfmpegPath(ffmpegPath);
+
+const { ImgurClient } = require('imgur');
+const clientImgur = new ImgurClient({
+  clientId: '979c4b467df9e38' || process.env.CLIENT_SECRE,
+  clientSecret: 'f842fd77455295d443b6957081c585e59d0fd3aa' || process.env.REFRESH_TOKEN,
+});
 
 exports.CheckSlug = catchAsync(async (req, res, next) => {
   console.log('Slug value is: ' + req.params.slug);
@@ -69,7 +81,7 @@ exports.GetAllThreads = catchAsync(async (req, res) => {
   });
 });
 
-exports.UploadNewFile = async (req, res) => {
+exports.UploadNewFile = catchAsync(async (req, res) => {
   //console.log(req);
   const file = req.file;
 
@@ -97,7 +109,9 @@ exports.UploadNewFile = async (req, res) => {
 
   const driveID = driveAPIResponse.data.id;
   fs.unlink(file.path, function (err) {
-    if (err) throw err;
+    if (err) {
+      console.log(err);
+    }
     console.log('File deleted!');
   });
 
@@ -105,8 +119,57 @@ exports.UploadNewFile = async (req, res) => {
   res.status(201).json({
     status: 'success upload',
     driveID: driveID,
+    thumbnail: req.thumbnail,
   });
-};
+});
+
+exports.GetVideoThumbnail = catchAsync(async (req, res, next) => {
+  //console.log(req);
+  const file = req.file;
+  // console.log(file);
+  const filePath = file.path;
+
+  const pictureID = helperAPI.GenerrateRandomString(7);
+
+  console.log('Do ffmpeg shit');
+
+  await fluentFfmpeg(filePath)
+    .on(
+      'filenames',
+      catchAsync(async (filenames) => {
+        console.log('screenshots are ' + filenames.join(', '));
+      })
+    )
+    .on('end', async function () {
+      console.log('Screenshots taken');
+      const filename = 'resources-storage/uploads/thumbnail_' + pictureID + '.png';
+      if (fs.existsSync(filename)) {
+        console.log('yuyuko exist');
+        const photo = await imgurAPI({ image: fs.createReadStream(filename), type: 'stream' });
+        req.thumbnail = photo.link;
+
+        fs.unlinkSync(filename, function (err) {
+          if (err) {
+            console.log(err);
+          }
+          console.log('thumbnail deleted!');
+        });
+      } else {
+        console.log('yuyuko is not exist');
+      }
+    })
+    .on('error', function (err) {
+      console.error(err);
+    })
+    .screenshots({
+      timestamps: [helperAPI.GenerrateRandomNumberBetween(4, 9)],
+      filename: 'thumbnail_' + pictureID + '.png',
+      folder: 'resources-storage/uploads/',
+      size: '320x240',
+    });
+
+  next();
+});
 
 exports.GetThread = catchAsync(async (req, res) => {
   // console.log(req.params);

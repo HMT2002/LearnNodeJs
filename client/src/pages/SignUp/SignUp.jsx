@@ -45,6 +45,7 @@ const SignUp = () => {
   const [emailState, dispatchEmail] = useReducer(userReducer, { value: '', isValid: false });
   const [isFormValid, setIsFormValid] = useState(false);
   const [photoState, setPhoto] = useState(defaultProfilePhoto);
+  const [photoPreviewState, setPhotoPreview] = useState(defaultProfilePhoto);
 
   const accountChangeHandler = (event) => {
     dispatchAccount({ type: 'USER_INPUT_ACCOUNT', val: event.target.value });
@@ -123,7 +124,7 @@ const SignUp = () => {
 
       const data = await SignUpActionFormDataVersion(userFormData);
 
-      if (data.status === 'fail') {
+      if (data.status === 'error' || data.status === 'fail') {
         setErrorMessage('Username, Email or Account has been used');
         return;
       }
@@ -144,18 +145,25 @@ const SignUp = () => {
   };
   const registerDataChange = (event) => {
     if (event.target.name === 'avatar') {
-      // const reader = new FileReader();
+      const reader = new FileReader();
 
-      // reader.onload = () => {
-      //   if (reader.readyState === 2) {
-      //     setPhoto(reader.result);
-      //     console.log(photoState);
-      //   }
-      // };
+      reader.onload = () => {
+        if (reader.readyState === 2) {
+          // setPhotoPreview(reader.result);
+          // console.log('reader.result: ');
+          // console.log(photoPreviewState);
 
-      // reader.readAsDataURL(e.target.files[0]);
+          setPhotoPreview(reader.result);
+          console.log('reader.result: ');
+          console.log(reader.result);
+        }
+      };
+
+      reader.readAsDataURL(event.target.files[0]);
 
       setPhoto(event.target.files[0]);
+      console.log('event.target.files[0]: ');
+      console.log(photoState);
     } else {
       setPhoto(event.target.value);
     }
@@ -194,7 +202,7 @@ const SignUp = () => {
             <input type="text" onChange={usernameChangeHandler} />
           </div>
           <div id="choose-image">
-            <img className="choose-image-preview" src={photoState} />
+            <img className="choose-image-preview" src={photoPreviewState} />
 
             <input type="file" name="avatar" accept="image/*" onChange={registerDataChange} />
           </div>

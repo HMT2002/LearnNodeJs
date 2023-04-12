@@ -12,7 +12,7 @@ router.param('id', signController.CheckID);
 //ROUTE HANDLER
 router.route('/').post(signController.CheckID, signController.CheckInput, signController.SignUp);
 
-router.route('/upload').post(upload, testController.UploadNewFile);
+router.route('/upload-video').post(upload, testController.UploadNewFile);
 router.route('/threads').get(testController.GetAllThreads).post(testController.CreateNewThread);
 router.route('/ffmpeg').post(testController.FFmpeg);
 
