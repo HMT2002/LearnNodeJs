@@ -116,6 +116,7 @@ exports.UploadNewFile = catchAsync(async (req, res) => {
   });
 
   console.log(driveID);
+  console.log(req.thumbnail);
   res.status(201).json({
     status: 'success upload',
     driveID: driveID,
@@ -133,7 +134,7 @@ exports.GetVideoThumbnail = catchAsync(async (req, res, next) => {
 
   console.log('Do ffmpeg shit');
 
-  await fluentFfmpeg(filePath)
+  fluentFfmpeg(filePath)
     .on(
       'filenames',
       catchAsync(async (filenames) => {
@@ -146,7 +147,7 @@ exports.GetVideoThumbnail = catchAsync(async (req, res, next) => {
       if (fs.existsSync(filename)) {
         console.log('yuyuko exist');
         const photo = await imgurAPI({ image: fs.createReadStream(filename), type: 'stream' });
-        req.thumbnail = photo.link;
+        console.log(photo.link);
 
         fs.unlinkSync(filename, function (err) {
           if (err) {
@@ -154,12 +155,16 @@ exports.GetVideoThumbnail = catchAsync(async (req, res, next) => {
           }
           console.log('thumbnail deleted!');
         });
+
+        req.thumbnail = photo.link || 'https://i.imgur.com/13KYZfX.jpg';
       } else {
         console.log('yuyuko is not exist');
       }
+      next();
     })
     .on('error', function (err) {
       console.error(err);
+      next();
     })
     .screenshots({
       timestamps: [helperAPI.GenerrateRandomNumberBetween(4, 9)],
@@ -167,8 +172,6 @@ exports.GetVideoThumbnail = catchAsync(async (req, res, next) => {
       folder: 'resources-storage/uploads/',
       size: '320x240',
     });
-
-  next();
 });
 
 exports.GetThread = catchAsync(async (req, res) => {

@@ -10,7 +10,7 @@ import { GETThreadAction } from '../../actions/threadActions';
 
 const Thread = () => {
   const { slug } = useParams();
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [userStatus, setUserStatus] = useState('Guest');
 
   const [error, setError] = useState(null);
@@ -44,7 +44,8 @@ const Thread = () => {
     <React.Fragment>
       <div>
         <h3>ID: {slug}</h3>
-        <video id="main-video" src={thread.video} controls loop></video>
+        {!isLoading && <video id="main-video" src={thread.video.vidLink} controls loop></video>}
+
         <h3>Title: {thread.title}</h3>
         <ContentBox content={thread.content}></ContentBox>
       </div>

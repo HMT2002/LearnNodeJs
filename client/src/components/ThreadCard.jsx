@@ -8,6 +8,7 @@ function ThreadCard(props) {
   const [title, setTitle] = useState(props.thread.title);
   const [user, setUser] = useState(props.thread.user);
   const [content, setContent] = useState(props.thread.content);
+  const [thumbnail, setThumbnail] = useState(props.thread.video.thumbLink);
 
   const [slug, setSlug] = useState(props.thread.slug);
 
@@ -27,6 +28,7 @@ function ThreadCard(props) {
         <p>{title}</p>
         <p>{user.username}</p>
         <p>{content}</p>
+        <img className="video-thumbnail" src={thumbnail} />
       </figure>
     </Card>
   );

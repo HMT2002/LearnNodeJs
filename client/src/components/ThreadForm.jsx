@@ -6,6 +6,8 @@ const ThreadForm = (props) => {
   const [enteredTitle, setEnteredTitle] = useState('');
   const [enteredContent, setEnteredContent] = useState('');
   const [videoDriveLink, setVideoDriveLink] = useState('');
+  const [videoImgurThumbnailLink, setVideomgurThumbnailLink] = useState('https://i.imgur.com/13KYZfX.jpg');
+
   const [enteredVideo, setEnteredVideo] = useState('');
   const [enteredTag, setEnteredTag] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -31,6 +33,7 @@ const ThreadForm = (props) => {
     formData.append('myFile', event.target.files[0]);
     const data = await POSTVideoUploadAction(formData);
     setVideoDriveLink('https://drive.google.com/uc?export=view&id=' + data.driveID);
+    setVideomgurThumbnailLink(data.thumbnail);
     // console.log(data.driveID);
 
     setIsLoading(false);
@@ -79,7 +82,7 @@ const ThreadForm = (props) => {
 
     const threadData = {
       title: enteredTitle,
-      video: videoDriveLink,
+      video: { vidLink: videoDriveLink, thumbLink: videoImgurThumbnailLink },
       user: 'user thread',
       content: enteredContent,
       tag: enteredTag,
@@ -97,6 +100,7 @@ const ThreadForm = (props) => {
     setEnteredVideo('');
     setEnteredContent('');
     setVideoDriveLink('');
+    setVideomgurThumbnailLink('https://i.imgur.com/13KYZfX.jpg');
     setEnteredTag('');
   };
 

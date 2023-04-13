@@ -38,9 +38,6 @@ export const POSTThreadAction = async (thread) => {
   if (!thread) {
     return { status: 'fail' };
   }
-  if (!thread) {
-    return { status: 'fail' };
-  }
   const storedToken = localStorage.getItem('token');
 
   const response = await fetch('/api/v1/threads', {

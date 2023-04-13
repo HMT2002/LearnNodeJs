@@ -33,6 +33,8 @@ const NewThread = (props) => {
       // setThreads((prevThreads) => {
       //   return [data.data, ...prevThreads];
       // });
+
+      navigate('/');
     } catch (err) {
       console.log(err.message);
       setError(err.message);

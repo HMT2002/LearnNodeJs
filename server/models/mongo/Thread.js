@@ -6,7 +6,10 @@ const threadSchema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null, required: [true, 'Thread required'] },
   createDate: { type: Date, required: false },
   tag: { type: String, required: [true, 'Thread required'] },
-  video: { type: String, required: [true, 'Thread required'] },
+  video: {
+    vidLink: { type: String, required: [true, 'Thread required'] },
+    thumbLink: { type: String, default: 'https://i.imgur.com/13KYZfX.jpg' },
+  },
   slug: { type: String, required: [false, 'Thread required'] },
 });
 const Thread = mongoose.model('Thread', threadSchema);
