@@ -6,11 +6,13 @@ const ThreadForm = (props) => {
   const [enteredTitle, setEnteredTitle] = useState('');
   const [enteredContent, setEnteredContent] = useState('');
   const [videoDriveLink, setVideoDriveLink] = useState('');
-  const [videoImgurThumbnailLink, setVideomgurThumbnailLink] = useState('https://i.imgur.com/13KYZfX.jpg');
+  const [videoImgurThumbnailLink, setVideomgurThumbnailLink] = useState('');
 
   const [enteredVideo, setEnteredVideo] = useState('');
   const [enteredTag, setEnteredTag] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isVideoUploaded, setIsVideoUploaded] = useState(false);
+
   const [errorMessage, setErrorMessage] = useState('');
 
   const titleChangeHandler = (event) => {
@@ -22,13 +24,32 @@ const ThreadForm = (props) => {
   };
 
   const videoChangeHandler = async (event) => {
+    if (event.target.files[0] === undefined) {
+      console.log('file not selected');
+      return;
+    }
+
     setEnteredVideo(event.target.value);
     setIsLoading(true);
     setErrorMessage('Video is uploading');
     //console.log(event.target.value);
     //console.log(event.target);
-    //console.log(event.target.files[0]);
+    console.log(event.target.files[0]);
 
+    const filesize = (event.target.files[0].size / 1024 / 1024).toFixed(4); // MB
+    const filetype = event.target.files[0].type; // mimetype, ex: "video.mp4"
+
+    console.log(filesize);
+    console.log(filetype);
+
+    if (filesize > 300) {
+      console.log(filesize + ' is to big');
+    }
+    if (!filetype.includes('video')) {
+      console.log(filetype + ' is wrong format');
+    }
+
+    return;
     let formData = new FormData();
     formData.append('myFile', event.target.files[0]);
     const data = await POSTVideoUploadAction(formData);
@@ -36,6 +57,7 @@ const ThreadForm = (props) => {
     setVideomgurThumbnailLink(data.thumbnail);
     // console.log(data.driveID);
 
+    setIsVideoUploaded(true);
     setIsLoading(false);
     setErrorMessage('');
   };
@@ -86,7 +108,6 @@ const ThreadForm = (props) => {
       user: 'user thread',
       content: enteredContent,
       tag: enteredTag,
-      createDate: Date.now(),
       slug: slug,
     };
     let error = null;
@@ -100,7 +121,7 @@ const ThreadForm = (props) => {
     setEnteredVideo('');
     setEnteredContent('');
     setVideoDriveLink('');
-    setVideomgurThumbnailLink('https://i.imgur.com/13KYZfX.jpg');
+    setVideomgurThumbnailLink('');
     setEnteredTag('');
   };
 
@@ -114,7 +135,14 @@ const ThreadForm = (props) => {
 
         <div className="new-thread__controls">
           <label>Explain Video</label>
-          <input id="myFile" name="myFile" type="file" onChange={videoChangeHandler} value={enteredVideo} />
+          <input
+            id="myFile"
+            name="myFile"
+            type="file"
+            onChange={videoChangeHandler}
+            value={enteredVideo}
+            accept="video/*"
+          />
         </div>
 
         <div className="new-thread__controls">
@@ -137,6 +165,7 @@ const ThreadForm = (props) => {
         <button type="submit">Create new thread</button>
       </div>
 
+      {!isLoading && <img id="video-preview" src={videoImgurThumbnailLink} controls loop></img>}
       <div className="new-thread__error_message">
         <p>{errorMessage}</p>
       </div>

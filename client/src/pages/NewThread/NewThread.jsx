@@ -5,20 +5,20 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { POSTThreadAction } from '../../actions/threadActions';
+import AuthContext from '../../store/auth-context';
 
 const NewThread = (props) => {
   const navigate = useNavigate();
-
-  useEffect(() => {
-    console.log(localStorage.getItem('token'));
-    if (!localStorage.getItem('token')) {
-      navigate('/sign/in');
-    }
-  }, []);
-
   const [isLoading, setIsLoading] = useState(false);
 
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    // console.log(localStorage.getItem('token'));
+    // if (!localStorage.getItem('token')) {
+    //   navigate('/sign/in');
+    // }
+  }, []);
 
   const saveThreadDataHandler = useCallback(async (thread, error) => {
     try {
@@ -33,6 +33,13 @@ const NewThread = (props) => {
       // setThreads((prevThreads) => {
       //   return [data.data, ...prevThreads];
       // });
+
+      if (data.status !== 'success create') {
+        setError('Something went wrong');
+        console.log(data.status);
+        console.log(data.message);
+        return;
+      }
 
       navigate('/');
     } catch (err) {
@@ -49,17 +56,28 @@ const NewThread = (props) => {
   //   props.onAddThread(threadData, error);
   // };
   return (
-    <section>
-      <div className="new-thread">
-        <section>
-          <ThreadForm onSaveThreadData={saveThreadDataHandler} />
-        </section>
-        <section className="new-thread_error">
-          {error && !isLoading && <p>{error.message}</p>}
-          {isLoading && <p>Loading</p>}
-        </section>
-      </div>
-    </section>
+    <React.Fragment>
+      <AuthContext.Consumer>
+        {(ctx) => {
+          if (!ctx.isLoggedIn) {
+            navigate('/sign/in');
+          }
+          return (
+            <section>
+              <div className="new-thread">
+                <section>
+                  <ThreadForm onSaveThreadData={saveThreadDataHandler} />
+                </section>
+                <section className="new-thread_error">
+                  {error && !isLoading && <p>{error.message}</p>}
+                  {isLoading && <p>Loading</p>}
+                </section>
+              </div>
+            </section>
+          );
+        }}
+      </AuthContext.Consumer>
+    </React.Fragment>
   );
 };
 

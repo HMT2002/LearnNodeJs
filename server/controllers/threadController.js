@@ -147,9 +147,7 @@ exports.GetVideoThumbnail = catchAsync(async (req, res, next) => {
       if (fs.existsSync(filename)) {
         console.log('yuyuko exist');
         const photo = await imgurAPI({ image: fs.createReadStream(filename), type: 'stream' });
-        console.log(photo.link);
-
-        fs.unlinkSync(filename, function (err) {
+        fs.unlinkSync(filename, (err) => {
           if (err) {
             console.log(err);
           }
@@ -159,11 +157,14 @@ exports.GetVideoThumbnail = catchAsync(async (req, res, next) => {
         req.thumbnail = photo.link || 'https://i.imgur.com/13KYZfX.jpg';
       } else {
         console.log('yuyuko is not exist');
+        req.thumbnail = 'https://i.imgur.com/13KYZfX.jpg';
       }
       next();
     })
     .on('error', function (err) {
       console.error(err);
+      req.thumbnail = 'https://i.imgur.com/13KYZfX.jpg';
+
       next();
     })
     .screenshots({

@@ -9,8 +9,11 @@ import SignUp from './pages/SignUp/SignUp';
 import Thread from './pages/Thread/Thread';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import ProtectedRoute from './components/Route/ProtectRoute';
+import AuthContext from './store/auth-context';
 
 function App() {
+  const [isLoggedin, setIsLoggedIn] = useState(false);
+
   // const [threads, setThreads] = useState([]);
   // const [isLoading, setIsLoading] = useState(false);
   // const [error, setError] = useState(null);
@@ -70,16 +73,22 @@ function App() {
     <React.Fragment>
       <div className="App">
         <header className="App-header">
-          <Routes>
-            <Route path="/" element={<Welcome />}></Route>
-            <Route path="/threads" element={<Welcome />}></Route>
-            <Route path="/user-info" element={<Welcome />}></Route>
-            <Route path="/create-thread" element={<NewThread />}></Route>
-            <Route path="/test" element={<TestPage />}></Route>
-            <Route path="/sign/in" element={<SignIn />}></Route>
-            <Route path="/sign/up" element={<SignUp />}></Route>
-            <Route path="/threads/:slug" element={<Thread />}></Route>
-          </Routes>
+          <AuthContext.Provider
+            value={{
+              isLoggedIn: isLoggedin,
+            }}
+          >
+            <Routes>
+              <Route path="/" element={<Welcome />}></Route>
+              <Route path="/threads" element={<Welcome />}></Route>
+              <Route path="/user-info" element={<Welcome />}></Route>
+              <Route path="/create-thread" element={<NewThread />}></Route>
+              <Route path="/test" element={<TestPage />}></Route>
+              <Route path="/sign/in" element={<SignIn />}></Route>
+              <Route path="/sign/up" element={<SignUp />}></Route>
+              <Route path="/threads/:slug" element={<Thread />}></Route>
+            </Routes>
+          </AuthContext.Provider>
         </header>
       </div>
     </React.Fragment>
