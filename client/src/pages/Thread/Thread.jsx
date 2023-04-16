@@ -11,7 +11,7 @@ import { GETThreadAction } from '../../actions/threadActions';
 const Thread = () => {
   const { slug } = useParams();
   const [isLoading, setIsLoading] = useState(true);
-  const [userStatus, setUserStatus] = useState('Guest');
+  const [userStatus, setUserStatus] = useState('guest');
 
   const [error, setError] = useState(null);
   const [thread, setThread] = useState({});

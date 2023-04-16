@@ -2,7 +2,7 @@ import './SignUp.css';
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 
 import React, { Fragment, useState, useReducer, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, redirect } from 'react-router-dom';
 
 import Card from '../../components/Card';
 import defaultProfilePhoto from '../../resources/defaultProfilePhoto.jpg';

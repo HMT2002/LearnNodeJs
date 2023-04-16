@@ -1,10 +1,11 @@
 import './SignIn.css';
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 
-import React, { useCallback, useState, useEffect, useReducer } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useCallback, useState, useEffect, useReducer, useContext } from 'react';
+import { useNavigate, redirect } from 'react-router-dom';
 
 import { SignInAction } from '../../actions/userActions';
+import AuthContext from '../../store/auth-context';
 
 const userReducer = (state, action) => {
   if (action.type === 'USER_INPUT_ACCOUNT') {
@@ -27,6 +28,8 @@ const userReducer = (state, action) => {
 
 const SignIn = () => {
   const navigate = useNavigate();
+
+  const authCtx = useContext(AuthContext);
 
   const [accountState, dispatchAccount] = useReducer(userReducer, { value: '', isValid: false });
   const [passwordState, dispatchPassword] = useReducer(userReducer, { value: '', isValid: false });
@@ -51,6 +54,9 @@ const SignIn = () => {
 
     const response = await SignInAction(userData);
 
+    // localStorage.setItem('token', 'Bearer ' + response.token);
+    authCtx.login(response.token, response.role);
+
     if (response.status === 'fail') {
       setErrorMessage(response.message);
       return;
@@ -60,14 +66,12 @@ const SignIn = () => {
     dispatchPassword({ type: 'USER_INPUT_PASSWORD', val: '' });
     setErrorMessage('Signed in!');
 
-    localStorage.setItem('token', 'Bearer ' + response.token);
+    // localStorage.setItem('token', 'Bearer ' + response.token);
     // localStorage.setItem(
     //   'token',
     //   'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MmVhOTFiNjAxODI2ZjEwZDk5N2EzMyIsImlhdCI6MTY4MDc5MDIyNywiZXhwIjoxNjg4NTY2MjI3fQ.WL1V8TcwSx5ArZzNVzAt5gSueGflyoVxzh6ebvFU6eQ'
     // );
 
-    console.log('localstorage: SignIn');
-    console.log(localStorage.getItem('token'));
     setIsLoading(false);
     navigate('/');
   };

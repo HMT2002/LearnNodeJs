@@ -71,6 +71,7 @@ exports.SignIn = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: 'success sign in',
     token: token,
+    role: user.role || 'guest',
   });
 });
 exports.SignOut = catchAsync(async () => {

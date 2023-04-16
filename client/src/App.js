@@ -1,5 +1,5 @@
 import './App.css';
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 
 import NewThread from './pages/NewThread/NewThread';
 import Welcome from './pages/Welcome/Welcome';
@@ -7,12 +7,16 @@ import TestPage from './pages/TestPage/TestPage';
 import SignIn from './pages/SignIn/SignIn';
 import SignUp from './pages/SignUp/SignUp';
 import Thread from './pages/Thread/Thread';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import ProtectedRoute from './components/Route/ProtectRoute';
 import AuthContext from './store/auth-context';
 
 function App() {
   const [isLoggedin, setIsLoggedIn] = useState(false);
+
+  const authCtx = useContext(AuthContext);
+  console.log(authCtx.isLoggedIn);
+  console.log(authCtx.role);
 
   // const [threads, setThreads] = useState([]);
   // const [isLoading, setIsLoading] = useState(false);
@@ -71,26 +75,27 @@ function App() {
 
   return (
     <React.Fragment>
-      <div className="App">
-        <header className="App-header">
-          <AuthContext.Provider
-            value={{
-              isLoggedIn: isLoggedin,
-            }}
-          >
-            <Routes>
-              <Route path="/" element={<Welcome />}></Route>
-              <Route path="/threads" element={<Welcome />}></Route>
-              <Route path="/user-info" element={<Welcome />}></Route>
-              <Route path="/create-thread" element={<NewThread />}></Route>
-              <Route path="/test" element={<TestPage />}></Route>
-              <Route path="/sign/in" element={<SignIn />}></Route>
-              <Route path="/sign/up" element={<SignUp />}></Route>
-              <Route path="/threads/:slug" element={<Thread />}></Route>
-            </Routes>
-          </AuthContext.Provider>
-        </header>
-      </div>
+      <Routes>
+        <Route path="/" exact element={<Welcome />}></Route>
+        <Route path="*" element={<Navigate to="/" replace />} />
+        {/* <Route path="/threads" exact element={<Welcome />}></Route> */}
+        <Route path="/user-info" exact element={!authCtx.isLoggedIn && <Welcome />}></Route>
+        <Route
+          path="/create-thread"
+          exact
+          element={
+            authCtx.isLoggedIn && (authCtx.role === 'content-creator' || authCtx.role === 'admin') ? (
+              <NewThread />
+            ) : (
+              <Navigate to="/" />
+            )
+          }
+        ></Route>
+        <Route path="/test" exact element={<TestPage />}></Route>
+        <Route path="/sign/in" exact element={<SignIn />}></Route>
+        <Route path="/sign/up" exact element={<SignUp />}></Route>
+        <Route path="/threads/:slug" exact element={<Thread />}></Route>
+      </Routes>
     </React.Fragment>
   );
 }

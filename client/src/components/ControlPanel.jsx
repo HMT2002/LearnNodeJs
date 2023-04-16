@@ -1,136 +1,36 @@
 import './ControlPanel.css';
-import React, { useState, useEffect, useCallback } from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
+import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom';
 import { CheckTokenAction } from '../actions/userActions';
+import AuthContext from '../store/auth-context';
 
 function ControllPanel(props) {
   const [userImage, setUserImage] = useState('');
 
   const [userAuthority, setUserAuthority] = useState('');
 
+  const authCtx = useContext(AuthContext);
+  const isLoggedIn = authCtx.isLoggedIn;
+  const navigate = useNavigate();
+
   const logOutHandler = useCallback(() => {
-    localStorage.removeItem('token');
+    authCtx.logout();
+
+    navigate('/');
   }, []);
 
   const fetchAuth = useCallback(async () => {
     try {
-      let tempAuthority = (
-        <div className="p-sectionLinks">
-          <ul className="p-sectionLinks-list">
-            <li>
-              <a href="/whats-new/posts/">New thead</a>
-            </li>
-            <li>
-              <a href="/find-threads/started">Find threads</a>
-            </li>
-            <li>
-              <a href="/sign/in">Sign in</a>
-            </li>
-            <li>
-              <a href="/sign/up">Sign up</a>
-            </li>
-          </ul>
-        </div>
-      );
+      const data = await CheckTokenAction(authCtx.token);
 
-      if (props.currentUser) {
-        switch (props.currentUser.role) {
-          case 'user':
-            tempAuthority = (
-              <div className="p-sectionLinks">
-                <ul className="p-sectionLinks-list">
-                  <li>
-                    <a href="/whats-new/thread/">New thead</a>
-                  </li>
-                  <li>
-                    <a href="/find-threads/started">Find threads</a>
-                  </li>
-                  <li>
-                    <a href="/find-threads/started">Your starred threads</a>
-                  </li>
-
-                  <li>
-                    <a href="/find-threads/contributed">Threads with your posts</a>
-                  </li>
-                  <li>
-                    <a href="/" onClick={logOutHandler}>
-                      Sign out
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            );
-            break;
-
-          case 'content-creator':
-            tempAuthority = (
-              <div className="p-sectionLinks">
-                <ul className="p-sectionLinks-list">
-                  <li>
-                    <a href="/whats-new/posts/">New thead</a>
-                  </li>
-                  <li>
-                    <a href="/find-threads/started">Find threads</a>
-                  </li>
-                  <li>
-                    <a href="/find-threads/started">Your threads</a>
-                  </li>
-                  <li>
-                    <a href="/find-threads/started">Your starred threads</a>
-                  </li>
-                  <li>
-                    <a href="/find-threads/contributed">Threads with your posts</a>
-                  </li>
-                  <li>
-                    <a href="/find-threads/unanswered">Unanswered threads</a>
-                  </li>
-                  <li>
-                    <a href="/create-thread/">Create new thread</a>
-                  </li>
-                  <li>
-                    <a href="/" onClick={logOutHandler}>
-                      Sign out
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            );
-            break;
-
-          case 'admin':
-            tempAuthority = (
-              <div className="p-sectionLinks">
-                <ul className="p-sectionLinks-list">
-                  <li>
-                    <a href="/whats-new/posts/">New thead</a>
-                  </li>
-                  <li>
-                    <a href="/find-threads/started">Find threads</a>
-                  </li>
-                  <li>
-                    <a href="/create-thread/">Create new thread</a>
-                  </li>
-                  <li>
-                    <a href="/admin">You are the admin</a>
-                  </li>
-                  <li>
-                    <a href="/" onClick={logOutHandler}>
-                      Sign out
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            );
-
-            break;
-          case 'guest':
-          default:
-            break;
-        }
-        setUserImage(<img className="user-image" src={props.currentUser.photo.link} />);
+      console.log(data);
+      if (data.status === 'fail') {
+        return;
       }
 
-      setUserAuthority(tempAuthority);
+      if (data.user) {
+        setUserImage(<img className="user-image" src={data.user.photo.link} />);
+      }
     } catch (error) {
       // console.log(error);
     }
@@ -138,13 +38,71 @@ function ControllPanel(props) {
 
   useEffect(() => {
     fetchAuth();
-  }, [fetchAuth, props.currentUser]);
+  }, [fetchAuth]);
 
   return (
     <React.Fragment>
       <div className="menu menu--structural" data-menu="menu" aria-hidden="true">
         <div className="user-info">{userImage}</div>
-        <div className="menu-content">{userAuthority}</div>
+        <div className="menu-content">
+          <ul className="p-sectionLinks-list">
+            <li>
+              <a href="/whats-new/posts/">New thead</a>
+            </li>
+            <li>
+              <a href="/find-threads">Find threads</a>
+            </li>
+            {authCtx.role === 'content-creator' && (
+              <li>
+                <a href="/your-threads/">Your threads</a>
+              </li>
+            )}
+            {authCtx.role === 'content-creator' && (
+              <li>
+                <a href="/create-thread/">Create new thread</a>
+              </li>
+            )}
+
+            {(authCtx.role === 'content-creator' || authCtx.role === 'user') && (
+              <li>
+                <a href="/stared">Your starred threads</a>
+              </li>
+            )}
+            {(authCtx.role === 'content-creator' || authCtx.role === 'user') && (
+              <li>
+                <a href="/contributed">Threads with your posts</a>
+              </li>
+            )}
+            {(authCtx.role === 'content-creator' || authCtx.role === 'user') && (
+              <li>
+                <a href="/unanswered-threads">Unanswered threads</a>
+              </li>
+            )}
+            {authCtx.role === 'admin' && (
+              <li>
+                <a href="/admin">You are the admin</a>
+              </li>
+            )}
+
+            {authCtx.role === null && (
+              <li>
+                <a href="/sign/in">Sign in</a>
+              </li>
+            )}
+            {authCtx.role === null && (
+              <li>
+                <a href="/sign/up">Sign up</a>
+              </li>
+            )}
+            {authCtx.role !== null && (
+              <li>
+                <a href="/" onClick={logOutHandler}>
+                  Sign out
+                </a>
+              </li>
+            )}
+          </ul>
+        </div>
       </div>
     </React.Fragment>
   );

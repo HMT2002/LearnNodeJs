@@ -12,7 +12,7 @@ const CommentBox = (props) => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userStatus, setUserStatus] = useState('Guest');
+  const [userStatus, setUserStatus] = useState('guest');
   const [error, setError] = useState(null);
   // console.log(props.thread);
   const loadingUserStatusHandler = useCallback(async () => {

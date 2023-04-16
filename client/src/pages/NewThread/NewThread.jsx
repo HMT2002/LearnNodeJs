@@ -5,7 +5,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { POSTThreadAction } from '../../actions/threadActions';
-import AuthContext from '../../store/auth-context';
 
 const NewThread = (props) => {
   const navigate = useNavigate();
@@ -57,26 +56,19 @@ const NewThread = (props) => {
   // };
   return (
     <React.Fragment>
-      <AuthContext.Consumer>
-        {(ctx) => {
-          if (!ctx.isLoggedIn) {
-            navigate('/sign/in');
-          }
-          return (
-            <section>
-              <div className="new-thread">
-                <section>
-                  <ThreadForm onSaveThreadData={saveThreadDataHandler} />
-                </section>
-                <section className="new-thread_error">
-                  {error && !isLoading && <p>{error.message}</p>}
-                  {isLoading && <p>Loading</p>}
-                </section>
-              </div>
-            </section>
-          );
-        }}
-      </AuthContext.Consumer>
+      return (
+      <section>
+        <div className="new-thread">
+          <section>
+            <ThreadForm onSaveThreadData={saveThreadDataHandler} />
+          </section>
+          <section className="new-thread_error">
+            {error && !isLoading && <p>{error.message}</p>}
+            {isLoading && <p>Loading</p>}
+          </section>
+        </div>
+      </section>
+      );
     </React.Fragment>
   );
 };

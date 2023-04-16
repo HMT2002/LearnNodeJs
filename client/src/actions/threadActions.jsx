@@ -2,12 +2,12 @@ export const GETThreadAction = async (slug) => {
   if (!slug) {
     return { status: 'fail' };
   }
-  const storedToken = localStorage.getItem('token');
+  // const storedToken = localStorage.getItem('token');
   const response = await fetch('/api/v1/threads/' + slug, {
     method: 'GET',
     headers: {
       // 'Content-Type': 'application/json',
-      Authorization: storedToken,
+      // Authorization: storedToken,
     },
   });
   if (!response.status || response.status === 'error') {
