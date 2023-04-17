@@ -1,16 +1,19 @@
 import './NewThread.css';
 
 import ThreadForm from '../../components/ThreadForm';
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { POSTThreadAction } from '../../actions/threadActions';
+
+import AuthContext from '../../store/auth-context';
 
 const NewThread = (props) => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
 
   const [error, setError] = useState(null);
+  const authCtx = useContext(AuthContext);
 
   useEffect(() => {
     // console.log(localStorage.getItem('token'));
@@ -24,11 +27,12 @@ const NewThread = (props) => {
       setIsLoading(true);
       //console.log(thread);
       //console.log(error);
+
       if (error != null) {
         throw new Error(error);
       }
 
-      const data = await POSTThreadAction(thread);
+      const data = await POSTThreadAction(thread, authCtx.token);
       // setThreads((prevThreads) => {
       //   return [data.data, ...prevThreads];
       // });

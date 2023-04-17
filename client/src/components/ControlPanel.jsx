@@ -84,17 +84,17 @@ function ControllPanel(props) {
               </li>
             )}
 
-            {authCtx.role === null && (
+            {authCtx.role === 'guest' && (
               <li>
                 <a href="/sign/in">Sign in</a>
               </li>
             )}
-            {authCtx.role === null && (
+            {authCtx.role === 'guest' && (
               <li>
                 <a href="/sign/up">Sign up</a>
               </li>
             )}
-            {authCtx.role !== null && (
+            {authCtx.role !== 'guest' && (
               <li>
                 <a href="/" onClick={logOutHandler}>
                   Sign out

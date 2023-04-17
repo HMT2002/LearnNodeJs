@@ -12,66 +12,9 @@ import ProtectedRoute from './components/Route/ProtectRoute';
 import AuthContext from './store/auth-context';
 
 function App() {
-  const [isLoggedin, setIsLoggedIn] = useState(false);
-
   const authCtx = useContext(AuthContext);
   console.log(authCtx.isLoggedIn);
   console.log(authCtx.role);
-
-  // const [threads, setThreads] = useState([]);
-  // const [isLoading, setIsLoading] = useState(false);
-  // const [error, setError] = useState(null);
-
-  // const fetchThreadHandler = useCallback(async () => {
-  //   setError(null);
-  //   setIsLoading(true);
-  //   try {
-  //     const response = await fetch('/api/test/threads');
-  //     if (!response.ok) {
-  //       throw new Error('Something went wrong!');
-  //     }
-  //     const data = await response.json();
-  //     console.log(data);
-  //     setThreads((prevThreads) => {
-  //       return [...data.data.threads];
-  //     });
-  //   } catch (error) {
-  //     setError(error.message);
-  //   }
-  //   setIsLoading(false);
-  // }, []);
-
-  // useEffect(() => {
-  //   fetchThreadHandler();
-  // }, [fetchThreadHandler]);
-
-  // const addThreadHandler = useCallback(async (thread, error) => {
-  //   try {
-  //     setIsLoading(true);
-  //     //console.log(thread);
-  //     //console.log(error);
-  //     if (error != null) {
-  //       throw new Error(error);
-  //     }
-  //     const response = await fetch('/api/v1/threads', {
-  //       method: 'POST',
-  //       body: JSON.stringify(thread),
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //     });
-  //     const response_data = await response.json();
-  //     console.log(response_data);
-  //     // setThreads((prevThreads) => {
-  //     //   return [response_data.data, ...prevThreads];
-  //     // });
-  //   } catch (err) {
-  //     console.log(err.message);
-  //     setError(err.message);
-  //   }
-  //   await fetchThreadHandler();
-  //   setIsLoading(false);
-  // }, []);
 
   return (
     <React.Fragment>
@@ -92,8 +35,8 @@ function App() {
           }
         ></Route>
         <Route path="/test" exact element={<TestPage />}></Route>
-        <Route path="/sign/in" exact element={<SignIn />}></Route>
-        <Route path="/sign/up" exact element={<SignUp />}></Route>
+        <Route path="/sign/in" exact element={authCtx.isLoggedIn ? <Navigate to="/" /> : <SignIn />}></Route>
+        <Route path="/sign/up" exact element={authCtx.isLoggedIn ? <Navigate to="/" /> : <SignUp />}></Route>
         <Route path="/threads/:slug" exact element={<Thread />}></Route>
       </Routes>
     </React.Fragment>

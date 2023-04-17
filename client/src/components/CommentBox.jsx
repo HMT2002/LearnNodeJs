@@ -1,12 +1,14 @@
 import './CommentBox.css';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 
 import CommentForm from './CommentForm';
 import ListCommentBlock from './ListCommentBlock';
 
 import { CheckTokenAction } from '../actions/userActions';
 import { GETAllCommentAction, POSTCommentAction } from '../actions/commentActions';
+
+import AuthContext from '../store/auth-context';
 const CommentBox = (props) => {
   const [comments, setComments] = useState(<p>There is no comment</p>);
 
@@ -14,19 +16,19 @@ const CommentBox = (props) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userStatus, setUserStatus] = useState('guest');
   const [error, setError] = useState(null);
+
+  const authCtx = useContext(AuthContext);
+
   // console.log(props.thread);
   const loadingUserStatusHandler = useCallback(async () => {
-    //setUserStatus(props.user);
     setIsLoading(true);
 
     //
     try {
-      const storedToken = localStorage.getItem('token');
-
-      const data = await CheckTokenAction(storedToken);
+      const data = await CheckTokenAction(authCtx.token);
+      setUserStatus('Logged in as ' + authCtx.role);
 
       if (data.status === 'ok') {
-        setUserStatus('Logged in as ' + data.role);
         setIsLoggedIn(true);
         console.log(data);
       }
@@ -67,12 +69,11 @@ const CommentBox = (props) => {
   }, [loadingCommentsHandler]);
 
   const postCommentHandler = async (comment) => {
-    const storedToken = localStorage.getItem('token');
     if (!props.thread) {
       throw new Error('No thread found: ' + comment.thread.slug);
     }
 
-    const data = await POSTCommentAction(comment, storedToken);
+    const data = await POSTCommentAction(comment, authCtx.token);
     console.log(data);
   };
   const saveCommentDataHandler = async (comment, error) => {

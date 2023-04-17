@@ -34,18 +34,17 @@ export const GETAllThreadAction = async () => {
   //   console.log(data);
   return data;
 };
-export const POSTThreadAction = async (thread) => {
+export const POSTThreadAction = async (thread, token) => {
   if (!thread) {
     return { status: 'fail' };
   }
-  const storedToken = localStorage.getItem('token');
 
   const response = await fetch('/api/v1/threads', {
     method: 'POST',
     body: JSON.stringify(thread),
     headers: {
       'Content-Type': 'application/json',
-      Authorization: storedToken,
+      Authorization: token,
     },
   });
   const data = await response.json();

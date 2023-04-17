@@ -10,7 +10,7 @@ const AuthContext = React.createContext({
 
 export const AuthContextProvider = (props) => {
   const initialToken = localStorage.getItem('token');
-  const initialRole = localStorage.getItem('role');
+  const initialRole = localStorage.getItem('role') || 'guest';
 
   const [token, setToken] = useState(initialToken);
   const [currentUserRole, setCurrentUserRole] = useState(initialRole);

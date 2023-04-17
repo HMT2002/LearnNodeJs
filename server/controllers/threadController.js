@@ -196,7 +196,7 @@ exports.CreateNewThread = catchAsync(async (req, res, next) => {
   console.log(req.body);
 
   const user = req.user;
-  const newThread = await Thread.create({ ...req.body, user: user }).populate('user');
+  const newThread = await Thread.create({ ...req.body, user: user });
 
   res.status(201).json({
     status: 'success create',

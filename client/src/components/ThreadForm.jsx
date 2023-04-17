@@ -44,12 +44,15 @@ const ThreadForm = (props) => {
 
     if (filesize > 300) {
       console.log(filesize + ' is to big');
+      setErrorMessage(filesize + ' is to big');
+      return;
     }
     if (!filetype.includes('video')) {
       console.log(filetype + ' is wrong format');
+      setErrorMessage(filetype + ' is wrong format');
+      return;
     }
 
-    return;
     let formData = new FormData();
     formData.append('myFile', event.target.files[0]);
     const data = await POSTVideoUploadAction(formData);
@@ -105,7 +108,6 @@ const ThreadForm = (props) => {
     const threadData = {
       title: enteredTitle,
       video: { vidLink: videoDriveLink, thumbLink: videoImgurThumbnailLink },
-      user: 'user thread',
       content: enteredContent,
       tag: enteredTag,
       slug: slug,
